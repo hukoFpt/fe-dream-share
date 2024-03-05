@@ -6,6 +6,8 @@ import ClientOnly from "./components/ClientOnly";
 import RegisterModal from "./components/modals/RegisterModal";
 import ToasterProvider from "./providers/ToasterProvider";
 import LoginModal from "./components/modals/LoginModal";
+import Collections from "./components/navbar/Collections";
+import Categories from "./components/navbar/Categories";
 
 export const metadata = {
   title: "Dream Share",
@@ -30,7 +32,7 @@ export default function RootLayout({
           <RegisterModal />
           <Navbar />
         </ClientOnly>
-        {children}
+        <main>{children}</main>
       </body>
     </html>
   );

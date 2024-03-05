@@ -1,3 +1,5 @@
+"use client";
+
 import CategoryBox from "../CategoryBox";
 import Container from "../Container";
 import { TbArmchair, TbBrandAirtable, TbBedFlat } from "react-icons/tb";
@@ -8,49 +10,6 @@ export const categories = [
     icon: TbArmchair,
   },
   {
-    label: "Table",
-    icon: TbBrandAirtable,
-  },
-  {
-    label: "Bed",
-    icon: TbBedFlat,
-  },
-  {
-    label: "Chair",
-    icon: TbArmchair,
-  },
-  {
-    label: "Table",
-    icon: TbBrandAirtable,
-  },
-  {
-    label: "Bed",
-    icon: TbBedFlat,
-  },
-  {
-    label: "Chair",
-    icon: TbArmchair,
-  },
-  {
-    label: "Table",
-    icon: TbBrandAirtable,
-  },
-  {
-    label: "Bed",
-    icon: TbBedFlat,
-  },
-  {
-    label: "Chair",
-    icon: TbArmchair,
-  },
-  {
-    label: "Table",
-    icon: TbBrandAirtable,
-  },
-  {
-    label: "Bed",
-    icon: TbBedFlat,
-  },{
     label: "Table",
     icon: TbBrandAirtable,
   },

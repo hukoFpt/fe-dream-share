@@ -14,6 +14,8 @@ const CategoryBox: React.FC<CategoryBoxProps> = ({
   return (
     <div
       className={`
+            h-full 
+            object-cover
             flex
             flex-col
             items-center
