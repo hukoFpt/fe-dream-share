@@ -1,33 +1,76 @@
 "use client";
 
+import { RiTableAltLine } from "react-icons/ri";
 import CategoryBox from "../CategoryBox";
 import Container from "../Container";
-import { TbArmchair, TbBrandAirtable, TbBedFlat } from "react-icons/tb";
+import { TbArmchair, TbBrandAirtable, TbBedFlat, TbSofa } from "react-icons/tb";
+import { IoBedOutline } from "react-icons/io5";
+import { BsBookshelf } from "react-icons/bs";
+import { HiTableCells } from "react-icons/hi2";
+import { MdChairAlt, MdOutlineDesk, MdOutlineKitchen, MdOutlineTableRestaurant } from "react-icons/md";
+import { PiOfficeChairBold, PiPottedPlantBold } from "react-icons/pi";
+import { BiCabinet } from "react-icons/bi";
+import { VscSymbolMisc } from "react-icons/vsc";
 
 export const categories = [
   {
-    label: "Chair",
-    icon: TbArmchair,
-  },
-  {
-    label: "Table",
-    icon: TbBrandAirtable,
+    label: "Closet",
+    icon: RiTableAltLine,
   },
   {
     label: "Bed",
-    icon: TbBedFlat,
+    icon: IoBedOutline,
+  },
+  {
+    label: "Sofa",
+    icon: TbSofa,
+  },
+  {
+    label: "Shelf",
+    icon: BsBookshelf,
+  },
+  {
+    label: "Cabinet",
+    icon: HiTableCells,
+  },
+  {
+    label: "Table",
+    icon: MdOutlineTableRestaurant,
+  },
+  {
+    label: "Kitchen",
+    icon: MdOutlineKitchen,
+  },
+  {
+    label: "Chair",
+    icon: MdChairAlt,
+  },
+  {
+    label: "Desk",
+    icon: MdOutlineDesk,
+  },
+  {
+    label: "Office",
+    icon: PiOfficeChairBold,
+  },
+  {
+    label: "Decorator",
+    icon: PiPottedPlantBold,
+  },
+  {
+    label: "Miscellaneous",
+    icon: VscSymbolMisc,
   },
 ];
 
 const Categories = () => {
   return (
-    <Container>
+    <Container zIndex={10}>
       <div
         className="
                 pt-4
                 flex
                 flex-row
-                items-center
                 justify-between
                 overflow-x-auto
             "

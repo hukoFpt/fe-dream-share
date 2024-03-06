@@ -2,7 +2,7 @@
 
 import Container from "../Container";
 import Categories from "./Categories";
-import Collections from "./Collections";
+import Collection from "./Collection";
 import Logo from "./Logo";
 import Search from "./Search";
 import UserMenu from "./UserMenu";
@@ -16,7 +16,7 @@ const Navbar = () => {
             border-b-[1px]        
         "
       >
-        <Container>
+        <Container zIndex={20}>
           <div
             className="
                 flex
@@ -33,7 +33,7 @@ const Navbar = () => {
           </div>
         </Container>
       </div>
-      <Collections />
+      <Collection />
       <Categories />
     </div>
   );

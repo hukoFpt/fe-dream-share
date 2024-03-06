@@ -16,7 +16,7 @@ const UserMenu = () => {
   }, []);
 
   return (
-    <div className="relative">
+    <div className="relative z-20">
       <div className="flex flex-row items-center gap-3">
         <div
           onClick={() => {}}

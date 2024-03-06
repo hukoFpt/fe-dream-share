@@ -135,12 +135,12 @@ const Modal: React.FC<ModalProps> = ({
               >
                 <button
                   className="
-                    p-1
+                    p-4
                     border-0 
                     hover:opacity-70
                     transition
                     absolute
-                    left-9
+                    right-0
                   "
                   onClick={handleClose}
                 >
