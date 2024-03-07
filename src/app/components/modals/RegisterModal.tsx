@@ -11,6 +11,7 @@ import Heading from "../Heading";
 import Input from "../inputs/Input";
 import toast from "react-hot-toast";
 import Button from "../Button";
+import { register } from "@/app/api/register";
 
 const RegisterModal = () => {
   const registerModal = useRegisterModal();
@@ -30,19 +31,15 @@ const RegisterModal = () => {
     },
   });
 
-  const onSubmit: SubmitHandler<FieldValues> = (data) => {
+  const onSubmit: SubmitHandler<FieldValues> = async (data) => {
     setIsLoading(true);
-    axios
-      .post("/api/register", data)
-      .then(() => {
-        registerModal.onClose();
-      })
-      .catch((error) => {
-        toast.error("Something went wrong!");
-      })
-      .finally(() => {
-        setIsLoading(false);
-      });
+    try {
+      const userData = await register(data.email, data.password);
+      console.log("Registration successful", userData);
+      registerModal.onClose();
+    } catch (error) {
+      console.error("An error occurred while trying to register:", error);
+    }
   };
 
   const onToggle = useCallback(() => {
@@ -75,6 +72,7 @@ const RegisterModal = () => {
       />
       <Input
         id="password"
+        type="password"
         label="* Password"
         disabled={isLoading}
         register={register}

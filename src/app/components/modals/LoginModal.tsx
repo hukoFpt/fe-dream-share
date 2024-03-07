@@ -15,6 +15,8 @@ import Input from "../inputs/Input";
 import Heading from "../Heading";
 import Button from "../Button";
 
+import { login } from '@/app/api/login';
+
 const LoginModal = () => {
   const router = useRouter();
   const loginModal = useLoginModal();
@@ -34,29 +36,9 @@ const LoginModal = () => {
 
   const onSubmit: SubmitHandler<FieldValues> = async (data) => {
     try {
-      console.log(data);
-      const response = await axios.get(
-        `https://65cd13f5dd519126b8401401.mockapi.io/signin`
-      );
-  
-      if (response.status !== 200) {
-        console.log("Login failed");
-        return;
-      }
-  
-      const users = response.data;
-  
-      const user = users.find(
-        (user: any) =>
-          user.email === data.email && user.password === data.password
-      );
-  
-      if (user) {
-        console.log("Login successful");
-        loginModal.onClose();
-      } else {
-        console.log("Login failed");
-      }
+      const userData = await login(data.email, data.password);
+      console.log("Login successful", userData);
+      loginModal.onClose();
     } catch (error) {
       console.error("An error occurred while trying to login:", error);
     }

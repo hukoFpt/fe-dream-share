@@ -1,5 +1,5 @@
 "use client";
-
+import { useWindowScroll } from "react-use";
 import Container from "../Container";
 import Categories from "./Categories";
 import Collection from "./Collection";
@@ -8,6 +8,8 @@ import Search from "./Search";
 import UserMenu from "./UserMenu";
 
 const Navbar = () => {
+  const { y } = useWindowScroll();
+
   return (
     <div className="fixed w-full bg-white z-10 shadow-sm">
       <div
@@ -33,7 +35,7 @@ const Navbar = () => {
           </div>
         </Container>
       </div>
-      <Collection />
+      {y < 50 && <Collection />}
       <Categories />
     </div>
   );
