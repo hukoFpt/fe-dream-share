@@ -4,15 +4,18 @@ interface CategoryBoxProps {
   icon: IconType;
   label: string;
   selected?: boolean;
+  onClick?: () => void;
 }
 
 const CategoryBox: React.FC<CategoryBoxProps> = ({
   icon: Icon,
   label,
   selected,
+  onClick,
 }) => {
   return (
     <div
+      onClick={onClick}
       className={`
             h-full 
             object-cover

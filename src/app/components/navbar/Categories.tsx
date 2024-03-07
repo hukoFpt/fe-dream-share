@@ -1,5 +1,3 @@
-"use client";
-
 import { RiTableAltLine } from "react-icons/ri";
 import CategoryBox from "../CategoryBox";
 import Container from "../Container";
@@ -7,10 +5,16 @@ import { TbArmchair, TbBrandAirtable, TbBedFlat, TbSofa } from "react-icons/tb";
 import { IoBedOutline } from "react-icons/io5";
 import { BsBookshelf } from "react-icons/bs";
 import { HiTableCells } from "react-icons/hi2";
-import { MdChairAlt, MdOutlineDesk, MdOutlineKitchen, MdOutlineTableRestaurant } from "react-icons/md";
+import {
+  MdChairAlt,
+  MdOutlineDesk,
+  MdOutlineKitchen,
+  MdOutlineTableRestaurant,
+} from "react-icons/md";
 import { PiOfficeChairBold, PiPottedPlantBold } from "react-icons/pi";
 import { BiCabinet } from "react-icons/bi";
 import { VscSymbolMisc } from "react-icons/vsc";
+import { SetStateAction, useState } from "react";
 
 export const categories = [
   {
@@ -64,6 +68,12 @@ export const categories = [
 ];
 
 const Categories = () => {
+  const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
+
+  const handleCategoryClick = (category: string) => {
+    setSelectedCategory(prevCategory => prevCategory === category ? null : category);
+  };
+
   return (
     <Container zIndex={10}>
       <div
@@ -76,7 +86,13 @@ const Categories = () => {
             "
       >
         {categories.map((item) => (
-          <CategoryBox key={item.label} label={item.label} icon={item.icon} />
+          <CategoryBox
+            key={item.label}
+            label={item.label}
+            icon={item.icon}
+            selected={item.label === selectedCategory}
+            onClick={() => handleCategoryClick(item.label)}
+          />
         ))}
       </div>
     </Container>
