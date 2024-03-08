@@ -3,6 +3,7 @@ import Image from "next/image";
 interface ProductProps {
   label: string;
   collection: string;
+  category: string;
   price: number;
   image: string;
 }
@@ -10,6 +11,7 @@ interface ProductProps {
 const ProductBox: React.FC<ProductProps> = ({
   label,
   collection,
+  category,
   price,
   image,
 }) => {

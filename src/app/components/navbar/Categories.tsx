@@ -15,6 +15,7 @@ import { PiOfficeChairBold, PiPottedPlantBold } from "react-icons/pi";
 import { BiCabinet } from "react-icons/bi";
 import { VscSymbolMisc } from "react-icons/vsc";
 import { SetStateAction, useState } from "react";
+import { usePathname, useSearchParams } from 'next/navigation';
 
 export const categories = [
   {
@@ -68,11 +69,15 @@ export const categories = [
 ];
 
 const Categories = () => {
-  const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
+  const params = useSearchParams();
+  const category = params?.get("category");
+  const pathnamee = usePathname();
+  
+  const isMainPage = pathnamee === "/";
 
-  const handleCategoryClick = (category: string) => {
-    setSelectedCategory(prevCategory => prevCategory === category ? null : category);
-  };
+  if(!isMainPage) {
+    return null;
+  }
 
   return (
     <Container zIndex={10}>
@@ -89,10 +94,8 @@ const Categories = () => {
           <CategoryBox
             key={item.label}
             label={item.label}
-            icon={item.icon}
-            selected={item.label === selectedCategory}
-            onClick={() => handleCategoryClick(item.label)}
-          />
+            selected={category === item.label}
+            icon={item.icon} />
         ))}
       </div>
     </Container>

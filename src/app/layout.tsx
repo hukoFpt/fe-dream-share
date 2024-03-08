@@ -30,9 +30,9 @@ export default function RootLayout({
           <LoginModal />
           <RegisterModal />
           <Navbar />
+          <main>{children}</main>
+          <Footer />
         </ClientOnly>
-        <main>{children}</main>
-        <Footer />
       </body>
     </html>
   );
