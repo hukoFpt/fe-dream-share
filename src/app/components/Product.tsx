@@ -1,86 +1,21 @@
-import { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Container from "./Container";
 import ProductBox from "./ProductBox";
 import { useRouter, usePathname, useSearchParams } from "next/navigation";
+import axios from 'axios';
 
-export const product = [
-  {
-    label: "Giường Ngủ Gỗ Tràm MOHO MALAGA 302",
-    collection: "NARVIK COLLECTION",
-    price: 1000,
-    category: "Bed",
-    image:
-      "https://product.hstatic.net/200000065946/product/pro_mau_nau_noi_that_moho_narvik_livingroom_full_04c13065d93a456ebf817275c8c54780_master.jpg",
-  },
-  {
-    label: "Giường Ngủ Gỗ Tràm MOHO MALAGA 301",
-    collection: "NARVIK COLLECTION",
-    price: 1000,
-    category: "Bed",
-    image:
-      "https://product.hstatic.net/200000065946/product/pro_mau_nau_noi_that_moho_narvik_livingroom_full_04c13065d93a456ebf817275c8c54780_master.jpg",
-  },
-  {
-    label: "Ghế Ăn Gỗ Cao Su Tự Nhiên MOHO NEXO",
-    collection: "UBEDA COLLECTION",
-    price: 1000,
-    category: "Chair",
-    image:
-      "https://product.hstatic.net/200000065946/product/pro_nau_noi_that_moho_ghe_sofa_go_vline_dem_be_2_d671600bc3dd49df994de39312f4ff8b_large.jpg",
-  },
-  {
-    label: "Giường Ngủ Gỗ Tràm MOHO MALAGA 304",
-    collection: "NARVIK COLLECTION",
-    price: 1000,
-    category: "Bed",
-    image:
-      "https://product.hstatic.net/200000065946/product/pro_mau_nau_noi_that_moho_narvik_livingroom_full_04c13065d93a456ebf817275c8c54780_master.jpg",
-  },
-  {
-    label: "Giường Ngủ Gỗ Tràm MOHO MALAGA 305",
-    collection: "NARVIK COLLECTION",
-    price: 1000,
-    category: "Bed",
-    image:
-      "https://product.hstatic.net/200000065946/product/pro_mau_nau_noi_that_moho_narvik_livingroom_full_04c13065d93a456ebf817275c8c54780_master.jpg",
-  },
-  {
-    label: "Ghế Ăn Gỗ Cao Su Tự Nhiên MOHO NEXO2",
-    collection: "UBEDA COLLECTION",
-    price: 1000,
-    category: "Chair",
-    image:
-      "https://product.hstatic.net/200000065946/product/pro_nau_noi_that_moho_ghe_sofa_go_vline_dem_be_2_d671600bc3dd49df994de39312f4ff8b_large.jpg",
-  },
-  {
-    label: "Giường Ngủ Gỗ Tràm MOHO MALAGA 306",
-    collection: "NARVIK COLLECTION",
-    price: 1000,
-    category: "Bed",
-    image:
-      "https://product.hstatic.net/200000065946/product/pro_mau_nau_noi_that_moho_narvik_livingroom_full_04c13065d93a456ebf817275c8c54780_master.jpg",
-  },
-  {
-    label: "Giường Ngủ Gỗ Tràm MOHO MALAGA 307",
-    collection: "NARVIK COLLECTION",
-    price: 1000,
-    category: "Bed",
-    image:
-      "https://product.hstatic.net/200000065946/product/pro_mau_nau_noi_that_moho_narvik_livingroom_full_04c13065d93a456ebf817275c8c54780_master.jpg",
-  },
-  {
-    label: "Ghế Ăn Gỗ Cao Su Tự Nhiên MOHO NEXO1",
-    collection: "UBEDA COLLECTION",
-    price: 1000,
-    category: "Chair",
-    image:
-      "https://product.hstatic.net/200000065946/product/pro_nau_noi_that_moho_ghe_sofa_go_vline_dem_be_2_d671600bc3dd49df994de39312f4ff8b_large.jpg",
-  },
-];
 const Product = () => {
+  const [product, setProducts] = useState([]);
+
+  useEffect(() => {
+    axios.get('https://65cd13f5dd519126b8401401.mockapi.io/Product')
+      .then((response) => setProducts(response.data))
+      .catch((error) => console.error('Error:', error));
+  }, []);
+  
   const router = useRouter();
   const searchParams  = useSearchParams();
-  const category = searchParams.get('category')
+  const category = searchParams?.get('category')
 
   console.log("this is category from url ",category);
   const selectedCategory = category;
@@ -111,8 +46,8 @@ const Product = () => {
       >
         {filteredProducts.map((item) => (
           <ProductBox
-            key={item.label}
-            label={item.label}
+            key={item.id}
+            label={item.title}
             image={item.image}
             price={item.price}
             category={item.category}

@@ -6,21 +6,29 @@ import { useCallback, useState } from "react";
 import MenuItem from "./MenuItem";
 import UseRegisterModal from "@/app/hooks/useRegisterModal";
 import UseLoginModal from "@/app/hooks/useLoginModal";
+import { useRouter } from "next/navigation";
 
 const UserMenu = () => {
+  const storedUser = localStorage.getItem("currentUser");
+  const user = JSON.parse(storedUser);
+  const handleSignOut = () => {
+    localStorage.removeItem("currentUser");
+    window.location.reload();
+  };
   const registerModal = UseRegisterModal();
   const loginModal = UseLoginModal();
   const [isOpen, setIsOpen] = useState(false);
   const toggleOpen = useCallback(() => {
     setIsOpen((value) => !value);
   }, []);
-
+  const router = useRouter();
   return (
     <div className="relative z-20">
       <div className="flex flex-row items-center gap-3">
-        <div
-          onClick={() => {}}
-          className="
+        {user && user.isAdmin && (
+          <div
+            onClick={() => router.push("/admin")}
+            className="
                 hidden
                 md:block
                 text-sm
@@ -32,8 +40,25 @@ const UserMenu = () => {
                 transition
                 cursor-pointer
             "
+          >
+            Admin Console
+          </div>
+        )}
+        <div
+          onClick={() => router.push("/cart")}
+          className="
+                md:block
+                text-sm
+                font-semibold
+                py-3
+                px-4
+                rounded-full
+                hover:bg-neutral-100
+                transition
+                cursor-pointer
+            "
         >
-          Admin Console
+          Cart
         </div>
         <div
           onClick={toggleOpen}
@@ -76,14 +101,18 @@ const UserMenu = () => {
         >
           <div className="flex flex-col cursor-pointer">
             <>
-              <MenuItem 
-                onClick={loginModal.onOpen}
-                label="Sign In"
-              />
-              <MenuItem 
-                onClick={registerModal.onOpen}
-                label="Sign Up"
-              />
+              {!user && (
+                <>
+                  <MenuItem onClick={loginModal.onOpen} label="Sign In" />
+                  <MenuItem onClick={registerModal.onOpen} label="Sign Up" />
+                </>
+              )}
+              {user && (
+                <>
+                  <MenuItem onClick={() => {}} label={user.email} />
+                  <MenuItem onClick={handleSignOut} label="Sign Out" />
+                </>
+              )}
             </>
           </div>
         </div>

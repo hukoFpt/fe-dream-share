@@ -35,10 +35,32 @@ const LoginModal = () => {
   });
 
   const onSubmit: SubmitHandler<FieldValues> = async (data) => {
+
     try {
-      const userData = await login(data.email, data.password);
-      console.log("Login successful", userData);
-      loginModal.onClose();
+      console.log(data.email, data.password);
+      const response = await fetch(
+        `https://65cd13f5dd519126b8401401.mockapi.io/signin`
+      );
+
+      if (!response.ok) {
+        console.log("Login failed");
+        return;
+      }
+
+      const users = await response.json();
+
+      const user = users.find(
+        (user: any) => user.email === data.email && user.password === data.password
+      );
+
+      if (user) {
+        console.log("Login successful");
+        localStorage.setItem('currentUser', JSON.stringify(user));
+        console.log(user);
+        window.location.reload();
+      } else {
+        console.log("Login failed");
+      }
     } catch (error) {
       console.error("An error occurred while trying to login:", error);
     }
@@ -103,6 +125,37 @@ const LoginModal = () => {
     </div>
   );
 
+  async function login(email: string, password: string) {
+    try {
+      console.log(email, password);
+      const response = await fetch(
+        `https://65cd13f5dd519126b8401401.mockapi.io/signin`
+      );
+
+      if (!response.ok) {
+        console.log("Login failed");
+        return;
+      }
+
+      const users = await response.json();
+
+      const user = users.find(
+        (user: any) => user.email === email && user.password === password
+      );
+
+      if (user) {
+        console.log("Login successful");
+        localStorage.setItem('currentUser', JSON.stringify(user));
+        console.log(user);
+        window.location.reload();
+      } else {
+        console.log("Login failed");
+      }
+    } catch (error) {
+      console.error("An error occurred while trying to login:", error);
+    }
+  }
+  
   return (
     <Modal
       disabled={isLoading}

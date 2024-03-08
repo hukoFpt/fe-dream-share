@@ -4,6 +4,7 @@ import { useRef, useState, useEffect } from "react";
 import Product from "./components/Product";
 import Navbar from "./components/navbar/Navbar";
 import ClientOnly from "./components/ClientOnly";
+import { CartProvider } from "./components/CartContext";
 
 export default function Home() {
   const [paddingTop, setPaddingTop] = useState("470px");
@@ -23,8 +24,10 @@ export default function Home() {
   }, []);
 
   return (
-    <div style={{ paddingTop }}>
-      <Product />
-    </div>
+    <CartProvider>
+      <div style={{ paddingTop }}>
+        <Product />
+      </div>
+    </CartProvider>
   );
 }

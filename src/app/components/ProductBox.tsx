@@ -1,4 +1,5 @@
 import Image from "next/image";
+import { useCart } from "./CartContext";
 
 interface ProductProps {
   label: string;
@@ -15,6 +16,7 @@ const ProductBox: React.FC<ProductProps> = ({
   price,
   image,
 }) => {
+  const { addToCart } = useCart();
   return (
     <div>
       <div className="flex flex-col items-center max-w-[400px]">
@@ -27,12 +29,14 @@ const ProductBox: React.FC<ProductProps> = ({
             src={image}
           ></Image>
           <div className="absolute inset-0 flex flex-col items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
-            <button>
+            <button
+              onClick={() =>
+                addToCart({ label, collection, category, price, image })
+              }
+            >
               Add to cart
             </button>
-            <button>
-              View Details
-            </button>
+            <button>View Details</button>
           </div>
         </div>
         <div className="flex flex-col w-full">

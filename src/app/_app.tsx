@@ -1,13 +1,8 @@
 import React from 'react';
-import { BrowserRouter as Router } from 'react-router-dom';
 import "./globals.css"
 
-function App() {
-    return (
-        <Router>
-            {/* Your app content goes here */}
-        </Router>
-    );
+function App({ Component, pageProps }: { Component: any, pageProps: any }) {
+    return <Component {...pageProps} />;
 }
 
 export default App;
