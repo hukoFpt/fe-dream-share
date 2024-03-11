@@ -8,16 +8,19 @@ const Product = () => {
   const [product, setProducts] = useState([]);
 
   useEffect(() => {
-    axios.get('https://65cd13f5dd519126b8401401.mockapi.io/Product')
-      .then((response) => setProducts(response.data))
-      .catch((error) => console.error('Error:', error));
+    axios.get('http://localhost:5000/products')
+  .then(response => {
+    setProducts(response.data.products);
+    console.log(product);
+  })
+  .catch(error => console.error('Error:', error));
   }, []);
   
   const router = useRouter();
   const searchParams  = useSearchParams();
   const category = searchParams?.get('category')
 
-  console.log("this is category from url ",category);
+  console.log("this is category from url ",product);
   const selectedCategory = category;
 
   const filteredProducts = selectedCategory
@@ -44,14 +47,16 @@ const Product = () => {
                 
               "
       >
-        {filteredProducts.map((item) => (
+        
+        {filteredProducts.map((product) => (
+          console.log("this is item",product),
           <ProductBox
-            key={item.id}
-            label={item.title}
-            image={item.image}
-            price={item.price}
-            category={item.category}
-            collection={item.collection}
+            key={product.id}
+            label={product.name}
+            image={product.image}
+            price={product.price}
+            category={product.category}
+            collection={product.collection}
           />
         ))}
       </div>

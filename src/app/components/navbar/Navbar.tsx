@@ -1,4 +1,5 @@
 "use client";
+
 import { useWindowScroll } from "react-use";
 import Container from "../Container";
 import Categories from "./Categories";

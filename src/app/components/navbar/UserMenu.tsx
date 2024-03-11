@@ -27,7 +27,7 @@ const UserMenu = () => {
       <div className="flex flex-row items-center gap-3">
         {user && user.isAdmin && (
           <div
-            onClick={() => router.push("/admin")}
+            onClick={() => router.push("http://localhost:3001/console")}
             className="
                 hidden
                 md:block

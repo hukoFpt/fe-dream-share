@@ -1,8 +1,16 @@
 "use client";
 
+import { useState } from "react";
 import { BiSearch } from "react-icons/bi";
 
 const Search = () => {
+  const [searchTerm, setSearchTerm] = useState("");
+
+  const handleSearch = (event) => {
+    event.preventDefault();
+    setSearchTerm(searchTerm);
+    console.log(searchTerm);
+  };
   return (
     <div
       className="
@@ -17,6 +25,7 @@ const Search = () => {
         cursor-pointer
     "
     >
+       <form onSubmit={handleSearch}>
       <div
         className="
             flex
@@ -32,7 +41,12 @@ const Search = () => {
                 px-6    
             "
         >
-          Search...
+          <input
+            type="text"
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            placeholder="Search..."
+          />
         </div>
         <div
           className="
@@ -45,18 +59,21 @@ const Search = () => {
           gap-3
         "
         >
-          <div
-            className="
+          <button type="submit">
+            <div
+              className="
             p-2
             bg-rose-500
             rounded-full
             text-white
           "
-          >
-            <BiSearch size={18} />
-          </div>
+            >
+              <BiSearch size={18} />
+            </div>
+          </button>
         </div>
       </div>
+      </form>
     </div>
   );
 };

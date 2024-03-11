@@ -1,5 +1,6 @@
 import Image from "next/image";
 import { useCart } from "./CartContext";
+import { Button } from "@nextui-org/react";
 
 interface ProductProps {
   label: string;
@@ -29,13 +30,13 @@ const ProductBox: React.FC<ProductProps> = ({
             src={image}
           ></Image>
           <div className="absolute inset-0 flex flex-col items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
-            <button
+          <Button radius="full" size="sm" 
               onClick={() =>
                 addToCart({ label, collection, category, price, image })
               }
             >
-              Add to cart
-            </button>
+              Add to Cart
+            </Button>
             <button>View Details</button>
           </div>
         </div>
