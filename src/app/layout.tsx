@@ -7,6 +7,7 @@ import RegisterModal from "./components/modals/RegisterModal";
 import ToasterProvider from "./providers/ToasterProvider";
 import LoginModal from "./components/modals/LoginModal";
 import Footer from "./components/footer/Footer";
+import CartModal from "./components/modals/CartModal";
 
 export const metadata = {
   title: "Dream Share",
@@ -29,6 +30,7 @@ export default function RootLayout({
           <ToasterProvider />
           <LoginModal />
           <RegisterModal />
+          <CartModal />
           <Navbar />
           <main>{children}</main>
           <Footer />

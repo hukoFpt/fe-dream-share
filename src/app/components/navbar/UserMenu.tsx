@@ -6,17 +6,19 @@ import { useCallback, useState } from "react";
 import MenuItem from "./MenuItem";
 import UseRegisterModal from "@/app/hooks/useRegisterModal";
 import UseLoginModal from "@/app/hooks/useLoginModal";
+import UseCartModal from "@/app/hooks/useCartModal";
 import { useRouter } from "next/navigation";
 
 const UserMenu = () => {
   const storedUser = localStorage.getItem("currentUser");
-  const user = JSON.parse(storedUser);
+  const user = JSON.parse(storedUser as string);
   const handleSignOut = () => {
     localStorage.removeItem("currentUser");
     window.location.reload();
   };
   const registerModal = UseRegisterModal();
   const loginModal = UseLoginModal();
+  const cartModal = UseCartModal();
   const [isOpen, setIsOpen] = useState(false);
   const toggleOpen = useCallback(() => {
     setIsOpen((value) => !value);
@@ -25,27 +27,8 @@ const UserMenu = () => {
   return (
     <div className="relative z-20">
       <div className="flex flex-row items-center gap-3">
-        {user && user.isAdmin && (
-          <div
-            onClick={() => router.push("http://localhost:3001/console")}
-            className="
-                hidden
-                md:block
-                text-sm
-                font-semibold
-                py-3
-                px-4
-                rounded-full
-                hover:bg-neutral-100
-                transition
-                cursor-pointer
-            "
-          >
-            Admin Console
-          </div>
-        )}
         <div
-          onClick={() => router.push("/cart")}
+          onClick={cartModal.onOpen}
           className="
                 md:block
                 text-sm
@@ -107,8 +90,18 @@ const UserMenu = () => {
                   <MenuItem onClick={registerModal.onOpen} label="Sign Up" />
                 </>
               )}
-              {user && (
+              {user && user.isAdmin === false && (
                 <>
+                  <MenuItem onClick={() => {}} label={user.email} />
+                  <MenuItem onClick={handleSignOut} label="Sign Out" />
+                </>
+              )}
+              {user && user.isAdmin && (
+                <>
+                  <MenuItem
+                    onClick={() => router.push("http://localhost:3001/console")}
+                    label="Admin Console"
+                  />
                   <MenuItem onClick={() => {}} label={user.email} />
                   <MenuItem onClick={handleSignOut} label="Sign Out" />
                 </>

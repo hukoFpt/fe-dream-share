@@ -6,7 +6,7 @@ import { BiSearch } from "react-icons/bi";
 const Search = () => {
   const [searchTerm, setSearchTerm] = useState("");
 
-  const handleSearch = (event) => {
+  const handleSearch = (event: { preventDefault: () => void; }) => {
     event.preventDefault();
     setSearchTerm(searchTerm);
     console.log(searchTerm);

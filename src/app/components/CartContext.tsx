@@ -1,8 +1,14 @@
 import React, { createContext, useState, useContext, useEffect } from "react";
 
-// Define the shape of the context
+interface CartItem {
+  id: number;
+  label: string;
+  collection: string;
+  price: number;
+  quantity: number;
+}
 interface CartContextData {
-  cartItems: any[];
+  cartItems: CartItem[];
   addToCart: (item: any) => void;
   removeFromCart: (item: any) => void;
   updateQuantity: (item: any, quantity: number) => void;
@@ -29,6 +35,7 @@ const CartProvider: React.FC<{ children: React.ReactNode }> = ({
   }, [cartItems]);
 
   const addToCart = (item: any) => {
+    console.log("Adding item to cart", item);
     setCartItems((prevItems) => {
       const existingItem = prevItems.find((i) => i.id === item.id);
       if (existingItem) {
