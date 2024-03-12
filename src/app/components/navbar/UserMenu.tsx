@@ -18,7 +18,7 @@ const UserMenu = () => {
   };
   const registerModal = UseRegisterModal();
   const loginModal = UseLoginModal();
-  const cartModal = UseCartModal();
+  const cartModal = UseCartModal(); 
   const [isOpen, setIsOpen] = useState(false);
   const toggleOpen = useCallback(() => {
     setIsOpen((value) => !value);

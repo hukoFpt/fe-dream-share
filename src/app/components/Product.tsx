@@ -2,34 +2,47 @@ import React, { useEffect, useState } from "react";
 import Container from "./Container";
 import ProductBox from "./ProductBox";
 import { useRouter, usePathname, useSearchParams } from "next/navigation";
-import axios from 'axios';
+import axios from "axios";
+import { categories } from "./navbar/Categories";
 
 const Product = () => {
   const [product, setProducts] = useState([]);
 
   useEffect(() => {
-    axios.get('http://localhost:5000/products')
-  .then(response => {
-    setProducts(response.data.products);
-    console.log(product);
-  })
-  .catch(error => console.error('Error:', error));
+    axios
+      .get("http://localhost:5000/products")
+      .then((response) => {
+        setProducts(response.data.products);
+      })
+      .catch((error) => console.error("Error:", error));
   }, []);
-  
+
   const router = useRouter();
-  const searchParams  = useSearchParams();
-  const category = searchParams?.get('category')
+  const searchParams = useSearchParams();
+  const category = searchParams?.get("category");
 
-  console.log("this is category from url ",product);
   const selectedCategory = category;
+  const productCategory = categories.find(
+    (category) => category.id === product.type_id
+  );
+  const filteredProducts = product.filter((item) => {
+    if (!selectedCategory) {
+      return true;
+    }
 
-  const filteredProducts = selectedCategory
-    ? product.filter((item) => item.category === selectedCategory)
-    : product;
-  console.log(selectedCategory);
+    const productCategory = categories.find(
+      (category) => category.id === item.type_id
+    );
+
+    return productCategory && productCategory.label === selectedCategory;
+  });
 
   if (filteredProducts.length === 0) {
-    return <div className="text-rose-500 font-bold text-xl text-center pt-4">No products found for this category.</div>;
+    return (
+      <div className="text-rose-500 font-bold text-xl text-center pt-4">
+        No products found for this category.
+      </div>
+    );
   }
 
   return (
@@ -47,18 +60,29 @@ const Product = () => {
                 
               "
       >
-        
-        {filteredProducts.map((product) => (
-          console.log("this is item",product),
-          <ProductBox
-            key={product.id}
-            label={product.name}
-            image={product.image}
-            price={product.price}
-            category={product.category}
-            collection={product.collection}
-          />
-        ))}
+        {filteredProducts.map((product) => {
+          const productCategory = categories.find(
+            (category) => category.id === product.type_id
+          );
+          return (
+            <ProductBox
+              key={product.id}
+              id={product.id}
+              category={productCategory ? productCategory.label : "Unknown"}
+              collection={product.brand_id}
+              code={product.code}
+              name={product.name}
+              description={product.description}
+              highlight={product.highlight}
+              price={product.price}
+              quantity={product.quantity}
+              size={product.size}
+              color={product.color}
+              status={product.status}
+              image={product.image}
+            />
+          );
+        })}
       </div>
     </Container>
   );

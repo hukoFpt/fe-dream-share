@@ -13,7 +13,7 @@ export default function Footer() {
     "contactUs",
   ];
   return (
-    <div className="px-4 border-t border-t-gray-200 py-4 flex flex-col min-h-screen justify-between w-full text-sm z-50 bg-white items-center">
+    <div className="px-4 border-t border-t-gray-200 py-4 flex flex-col justify-between w-full text-sm z-50 bg-white items-center">
       <ul className="flex gap-3 font-normal mb-auto">
         <li>&copy; {new Date().getFullYear()} DreamShare</li>
         {links.map((link) => (

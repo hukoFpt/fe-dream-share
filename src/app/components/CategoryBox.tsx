@@ -5,6 +5,7 @@ import { IconType } from "react-icons";
 
 interface CategoryBoxProps {
   icon: IconType;
+  id: number;
   label: string;
   selected?: boolean;
   onClick?: () => void;
@@ -12,6 +13,7 @@ interface CategoryBoxProps {
 
 const CategoryBox: React.FC<CategoryBoxProps> = ({
   icon: Icon,
+  id,
   label,
   selected,
 }) => {
@@ -37,7 +39,7 @@ const CategoryBox: React.FC<CategoryBoxProps> = ({
   
     const url = qs.stringifyUrl(
       {
-        url: "/",
+        url: "/", 
         query: updatedQuery,
       },
       { skipNull: true, skipEmptyString: true }

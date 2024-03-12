@@ -1,6 +1,7 @@
 import Image from "next/image";
 
 interface CategoryBoxProps {
+  id: number;
   image: string;
   label: string;
   selected?: boolean;
@@ -8,6 +9,7 @@ interface CategoryBoxProps {
 }
 
 const CollectionBox: React.FC<CategoryBoxProps> = ({
+  id,
   image,
   label,
   selected,
@@ -16,6 +18,7 @@ const CollectionBox: React.FC<CategoryBoxProps> = ({
   return (
     <div
       className={`
+        group
         relative
         hover:outline-2
         hover:outline-black
@@ -28,7 +31,7 @@ const CollectionBox: React.FC<CategoryBoxProps> = ({
       <Image
         width={393}
         height={250}
-        className="object-cover h-[250px] w-[393px] rounded"
+        className="object-cover h-[250px] w-[393px] rounded group-hover:opacity-50 transition-all duration-500 ease-in-out"
         alt=""
         src={image}
       ></Image>

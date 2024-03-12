@@ -81,7 +81,7 @@ const CartModal = () => {
               focus:outline-none
             "
             >
-              <div>Your Cart</div>
+              <div className="text-center text-rose-500 font-bold text-xl py-3">Your Cart</div>
               {cartItems.map((item, index) => (
                 <div key={index}>
                   <div>{item.label}</div>
@@ -89,7 +89,7 @@ const CartModal = () => {
                   {/* Render other item properties as needed */}
                 </div>
               ))}
-              <button onClick={cartModal.onClose}>Close</button>
+              <button onClick={cartModal.onClose} className="text-white bg-rose-500 w-full rounded-b-lg text- py-2">Close</button>
             </div>
           </div>
         </div>
