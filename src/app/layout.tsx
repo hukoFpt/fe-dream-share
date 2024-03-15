@@ -9,6 +9,7 @@ import LoginModal from "./components/modals/LoginModal";
 import Footer from "./components/footer/Footer";
 import CartModal from "./components/modals/CartModal";
 import ProductModal from "./components/modals/ProductModal";
+import CheckoutModal from "./components/modals/CheckOutModal";
 
 export const metadata = {
   title: "Dream Share",
@@ -32,6 +33,7 @@ export default function RootLayout({
           <LoginModal />
           <RegisterModal />
           <CartModal />
+          <CheckoutModal />
           <ProductModal />
           <Navbar />
           <main>{children}</main>

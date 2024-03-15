@@ -8,7 +8,6 @@ interface productProps {
   name: string;
   description: string;
   highlight: number;
-  quantity: number;
   size: string;
   color: string;
   status: string;

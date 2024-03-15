@@ -1,14 +1,8 @@
 import React, { createContext, useState, useContext, useEffect } from "react";
 
-interface CartItem {
-  id: number;
-  label: string;
-  collection: string;
-  price: number;
-  quantity: number;
-}
+// Define the shape of the context
 interface CartContextData {
-  cartItems: CartItem[];
+  cartItems: any[];
   addToCart: (item: any) => void;
   removeFromCart: (item: any) => void;
   updateQuantity: (item: any, quantity: number) => void;
@@ -34,20 +28,35 @@ const CartProvider: React.FC<{ children: React.ReactNode }> = ({
     localStorage.setItem("cartItems", JSON.stringify(cartItems));
   }, [cartItems]);
 
-  const addToCart = (item: any) => {
-    console.log("Adding item to cart", item);
-    setCartItems((prevItems) => {
-      const existingItem = prevItems.find((i) => i.id === item.id);
-      if (existingItem) {
-        // If the item is already in the cart, increment its quantity
-        return prevItems.map((i) =>
-          i.id === item.id ? { ...i, quantity: i.quantity + 1 } : i
-        );
-      } else {
-        // If the item is not in the cart, add it with a quantity of 1
-        return [...prevItems, { ...item, quantity: 1 }];
-      }
-    });
+  const addToCart = (itemToAdd) => {
+    // Get the current cart items from localStorage
+    const currentCartItems = JSON.parse(
+      localStorage.getItem("cartItems") || "[]"
+    );
+
+    // Check if the item already exists in the cart
+    const existingItem = currentCartItems.find(
+      (item) => item.id === itemToAdd.id
+    );
+
+    let updatedCartItems;
+    if (existingItem) {
+      // If the item already exists, increase its quantity by one
+      updatedCartItems = currentCartItems.map((item) =>
+        item.id === itemToAdd.id
+          ? { ...item, quantity: item.quantity + 1 }
+          : item
+      );
+    } else {
+      // If the item doesn't exist, add it to the cart with a quantity of one
+      updatedCartItems = [...currentCartItems, { ...itemToAdd, quantity: 1 }];
+    }
+
+    // Update the 'cartItems' item in localStorage with the updated cart items
+    localStorage.setItem("cartItems", JSON.stringify(updatedCartItems));
+
+    // Update the cartItems state
+    setCartItems(updatedCartItems);
   };
 
   const removeFromCart = (item: any) => {

@@ -13,7 +13,6 @@ interface ProductProps {
     name: string;
     description: string;
     highlight: number;
-    quantity: number;
     size: string;
     color: string;
     status: string;
@@ -26,17 +25,17 @@ const ProductModal: React.FC = () => {
   const [isAdded, setIsAdded] = useState(false);
   const { addToCart } = useCart();
 
-  const [cart_quantity, setCartQuantity] = useState(1);
+  const [quantity, setQuantity] = useState(1);
   const handleInputChange = (event: { target: { value: string } }) => {
-    setCartQuantity(parseInt(event.target.value));
+    setQuantity(parseInt(event.target.value));
   };
   const increment = () => {
-    setCartQuantity(cart_quantity + 1);
+    setQuantity(quantity + 1);
   };
 
   const decrement = () => {
-    if (cart_quantity > 1) {
-      setCartQuantity(cart_quantity - 1);
+    if (quantity > 1) {
+      setQuantity(quantity - 1);
     }
   };
 
@@ -126,7 +125,7 @@ const ProductModal: React.FC = () => {
                 <input
                   className="text-center text-2xl text-bold w-12 h-10 border border-rose-500"
                   type="number"
-                  value={cart_quantity}
+                  value={quantity}
                   onChange={handleInputChange}
                 />
                 <button
@@ -142,7 +141,7 @@ const ProductModal: React.FC = () => {
                   onClick={() => {
                     productModal.addToCart({
                       ...products,
-                      cart_quantity,
+                      quantity,
                     });
                     productModal.setIsAdded(true);
                     setTimeout(() => productModal.setIsAdded(false), 1500);

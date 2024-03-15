@@ -75,7 +75,6 @@ const Product = () => {
               description={product.description}
               highlight={product.highlight}
               price={product.price}
-              quantity={product.quantity}
               size={product.size}
               color={product.color}
               status={product.status}
