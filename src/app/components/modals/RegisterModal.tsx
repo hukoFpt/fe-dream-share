@@ -34,9 +34,23 @@ const RegisterModal = () => {
   const onSubmit: SubmitHandler<FieldValues> = async (data) => {
     setIsLoading(true);
     try {
-      const userData = await register(data.email, data.password);
-      console.log("Registration successful", userData);
-      registerModal.onClose();
+      const formData = new FormData();
+      formData.append("email", data.email);
+      formData.append("password", data.password);
+
+      axios
+        .post("http://localhost:5000/accounts/create", formData, {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        })
+        .then(function (res) {
+          console.log("Create new success!!!");
+          console.log(res.data);
+        })
+        .catch(function (err) {
+          console.log(err);
+        });
     } catch (error) {
       console.error("An error occurred while trying to register:", error);
     }

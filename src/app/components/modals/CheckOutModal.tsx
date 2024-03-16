@@ -2,6 +2,7 @@
 
 import useCheckoutModal from "@/app/hooks/useCheckoutModal";
 import React, { useCallback, useEffect, useState } from "react";
+import { useCart } from "../CartContext";
 
 const CheckoutModal = () => {
   const checkoutModal = useCheckoutModal();
@@ -10,9 +11,25 @@ const CheckoutModal = () => {
     checkoutModal.onOpen();
   }, []);
   const [isOpen, setIsOpen] = useState(false);
+  const [selectedOption, setSelectedOption] = useState("option1");
+  const handleChange = (event) => {
+    setSelectedOption(event.target.value);
+  };
   const toggleOpen = useCallback(() => {
     setIsOpen((value) => !value);
   }, []);
+  const [cartItems, setCartItems] = useState([]);
+
+  useEffect(() => {
+    const storedCartItems = localStorage.getItem("cartItems");
+    if (storedCartItems) {
+      setCartItems(JSON.parse(storedCartItems));
+    }
+  }, []);
+  const totalPrice = cartItems.reduce((total, item) => {
+    return total + item.price * item.quantity;
+  }, 0);
+
   if (!checkoutModal.isOpen) {
     return null;
   }
@@ -51,6 +68,134 @@ const CheckoutModal = () => {
         >
           x
         </button>
+        <div className="flex flex-row">
+          <div className="w-3/5 flex flex-col">
+            <div className="text-xl font-bold px-2">Dream Share</div>
+            <div className="text-lg font-bold px-2 pt-2">
+              Billing Information
+            </div>
+            <div className="px-3 py-1">
+              <label htmlFor="name">* Full Name</label>
+              <input
+                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline "
+                type="text"
+                id="name"
+                name="name"
+              ></input>
+            </div>
+            <div className="flex flex-row">
+              <div className="px-3 py-1 w-3/5">
+                <label htmlFor="email">* Email</label>
+                <input
+                  className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline "
+                  type="text"
+                  id="email"
+                  name="email"
+                ></input>
+              </div>
+              <div className="px-3 py-1 w-2/5">
+                <label htmlFor="phone">* Phone</label>
+                <input
+                  className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline "
+                  type="text"
+                  id="phone"
+                  name="phone"
+                ></input>
+              </div>
+            </div>
+            <div className="px-3 py-1">
+              <label htmlFor="address">* Address</label>
+              <input
+                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline "
+                type="text"
+                id="address"
+                name="name"
+              ></input>
+            </div>
+            <div className="text-lg font-bold px-2 pt-2">Payment Methods</div>
+            <div className="p-2">
+              <div className="p-2 flex aligh-center border rounded-t-xl">
+                <input
+                  type="radio"
+                  id="option1"
+                  name="options"
+                  className="form-radio h-5 w-5 text-blue-600"
+                  checked={selectedOption === "option1"}
+                  onChange={handleChange}
+                />
+                <label htmlFor="option1" className="ml-2 text-gray-700">
+                  Cash on Delivery
+                </label>
+              </div>
+              <div className="p-2 flex aligh-center border">
+                <input
+                  type="radio"
+                  id="option2"
+                  name="options"
+                  className="form-radio h-5 w-5 text-blue-600"
+                  checked={selectedOption === "option1"}
+                  onChange={handleChange}
+                />
+                <label htmlFor="option2" className="ml-2 text-gray-700">
+                  Bank Transfer
+                </label>
+                {selectedOption === 'option2' && <p>You selected Option 2!</p>}
+              </div>
+              <div className="p-2 flex aligh-center border rounded-b-xl">
+                <input
+                  type="radio"
+                  id="option3"
+                  name="options"
+                  className="form-radio h-5 w-5 text-blue-600"
+                  checked={selectedOption === "option1"}
+                  onChange={handleChange}
+                />
+                <label htmlFor="option3" className="ml-2 text-gray-700">
+                  Internet Banking
+                </label>
+              </div>
+            </div>
+          </div>
+          <div className="w-2/5 flex flex-col">
+            <div className="text-xl font-bold text-center">Order Summary</div>
+            <div>
+              <table className="w-full border">
+                <tr className="border w-full">
+                  <th className="w-3/6 px-1 border-l">Product</th>
+                  <th className="w-1/6 px-1 border-l">QTY.</th>
+                  <th className="w-2/6 px-1 border-l">Price</th>
+                </tr>
+                {cartItems.map((item, index) => (
+                  <tr key={index}>
+                    <td className="border px-1">{item.name}</td>
+                    <td className="border text-center px-1">{item.quantity}</td>
+                    <td className="border text-right px-1">
+                      USD ${item.price * item.quantity}
+                    </td>
+                  </tr>
+                ))}
+                <tr>
+                  <td className="border px-1 text-xl" colSpan="2">
+                    Subtotal
+                  </td>
+                  <td className=" text-right p-1">USD ${totalPrice}</td>
+                </tr>
+                <tr>
+                  <td className=" px-1 text-xl" colSpan="2">
+                    Shipping
+                  </td>
+                  <td className="border text-right p-1">USD $0</td>
+                </tr>
+                <tr>
+                  <td className="border font-black px-1 text-xl" colSpan="2">
+                    Total
+                  </td>
+                  <td className="border text-right p-1">USD ${totalPrice}</td>
+                </tr>
+              </table>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   );
