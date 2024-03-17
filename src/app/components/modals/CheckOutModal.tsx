@@ -12,8 +12,11 @@ const CheckoutModal = () => {
   }, []);
   const [isOpen, setIsOpen] = useState(false);
   const [selectedOption, setSelectedOption] = useState("option1");
-  const handleChange = (event) => {
+  const handleChange = (event: {
+    target: { value: React.SetStateAction<string> };
+  }) => {
     setSelectedOption(event.target.value);
+    console.log(selectedOption);
   };
   const toggleOpen = useCallback(() => {
     setIsOpen((value) => !value);
@@ -119,8 +122,9 @@ const CheckoutModal = () => {
                   type="radio"
                   id="option1"
                   name="options"
+                  value="option1"
+                  defaultChecked
                   className="form-radio h-5 w-5 text-blue-600"
-                  checked={selectedOption === "option1"}
                   onChange={handleChange}
                 />
                 <label htmlFor="option1" className="ml-2 text-gray-700">
@@ -132,50 +136,73 @@ const CheckoutModal = () => {
                   type="radio"
                   id="option2"
                   name="options"
+                  value="option2"
                   className="form-radio h-5 w-5 text-blue-600"
-                  checked={selectedOption === "option1"}
                   onChange={handleChange}
                 />
                 <label htmlFor="option2" className="ml-2 text-gray-700">
-                  Bank Transfer
+                  DreamShare Wallet Balance
                 </label>
-                {selectedOption === 'option2' && <p>You selected Option 2!</p>}
+                {selectedOption === "option2" && (
+                  <div>You selected Option 2!</div>
+                )}
               </div>
-              <div className="p-2 flex aligh-center border rounded-b-xl">
+              <div className="p-2 flex aligh-center border">
                 <input
                   type="radio"
                   id="option3"
                   name="options"
+                  value="option3"
                   className="form-radio h-5 w-5 text-blue-600"
-                  checked={selectedOption === "option1"}
                   onChange={handleChange}
                 />
                 <label htmlFor="option3" className="ml-2 text-gray-700">
+                  Bank Transfer
+                </label>
+                {selectedOption === "option3" && (
+                  <div>You selected Option 3!</div>
+                )}
+              </div>
+              <div className="p-2 flex aligh-center border rounded-b-xl">
+                <input
+                  type="radio"
+                  id="option4"
+                  name="options"
+                  value="option4"
+                  className="form-radio h-5 w-5 text-blue-600"
+                  onChange={handleChange}
+                />
+                <label htmlFor="option4" className="ml-2 text-gray-700">
                   Internet Banking
                 </label>
+                {selectedOption === "option4" && (
+                  <div>You selected Option 4!</div>
+                )}
               </div>
             </div>
           </div>
-          <div className="w-2/5 flex flex-col">
+          <div className="w-2/5 flex flex-col pr-2">
             <div className="text-xl font-bold text-center">Order Summary</div>
             <div>
-              <table className="w-full border">
-                <tr className="border w-full">
-                  <th className="w-3/6 px-1 border-l">Product</th>
-                  <th className="w-1/6 px-1 border-l">QTY.</th>
-                  <th className="w-2/6 px-1 border-l">Price</th>
+              <table className="w-full border-2 ">
+                <tr className="border-2 w-full">
+                  <th className="w-3/6 px-1 border-l-2">Product</th>
+                  <th className="w-1/6 px-1 border-l-2">QTY.</th>
+                  <th className="w-2/6 px-1 border-l-2">Price</th>
                 </tr>
                 {cartItems.map((item, index) => (
                   <tr key={index}>
-                    <td className="border px-1">{item.name}</td>
-                    <td className="border text-center px-1">{item.quantity}</td>
-                    <td className="border text-right px-1">
+                    <td className="border-2 px-1">{item.name}</td>
+                    <td className="border-2 text-center px-1">
+                      {item.quantity}
+                    </td>
+                    <td className="border-2 text-right px-1">
                       USD ${item.price * item.quantity}
                     </td>
                   </tr>
                 ))}
                 <tr>
-                  <td className="border px-1 text-xl" colSpan="2">
+                  <td className="border-2 px-1 text-xl" colSpan="2">
                     Subtotal
                   </td>
                   <td className=" text-right p-1">USD ${totalPrice}</td>
@@ -184,13 +211,13 @@ const CheckoutModal = () => {
                   <td className=" px-1 text-xl" colSpan="2">
                     Shipping
                   </td>
-                  <td className="border text-right p-1">USD $0</td>
+                  <td className="border-2 text-right p-1">USD $0</td>
                 </tr>
                 <tr>
-                  <td className="border font-black px-1 text-xl" colSpan="2">
+                  <td className="border-2 font-black px-1 text-xl" colSpan="2">
                     Total
                   </td>
-                  <td className="border text-right p-1">USD ${totalPrice}</td>
+                  <td className="border-2 text-right p-1">USD ${totalPrice}</td>
                 </tr>
               </table>
             </div>

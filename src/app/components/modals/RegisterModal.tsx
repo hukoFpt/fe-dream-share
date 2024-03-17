@@ -39,10 +39,10 @@ const RegisterModal = () => {
       formData.append("password", data.password);
 
       axios
-        .post("http://localhost:5000/accounts/create", formData, {
-          headers: {
-            "Content-Type": "multipart/form-data",
-          },
+        .post("http://localhost:5000/accounts/create", {
+          email: data.email,
+          password: data.password,
+          name: data.name,
         })
         .then(function (res) {
           console.log("Create new success!!!");
@@ -54,6 +54,8 @@ const RegisterModal = () => {
     } catch (error) {
       console.error("An error occurred while trying to register:", error);
     }
+    registerModal.onClose();
+    setIsLoading(false);
   };
 
   const onToggle = useCallback(() => {
@@ -67,14 +69,6 @@ const RegisterModal = () => {
         title="Welcome to DreamShare"
         subtitle="Create an account"
         center
-      />
-      <Input
-        id="name"
-        label="* Name"
-        disabled={isLoading}
-        register={register}
-        errors={errors}
-        required
       />
       <Input
         id="email"
@@ -93,18 +87,37 @@ const RegisterModal = () => {
         errors={errors}
         required
       />
+      <div>Additional Information</div>
+      <Input
+        id="name"
+        label="* Name"
+        disabled={isLoading}
+        register={register}
+        errors={errors}
+        required
+      />
+      <Input
+        id="phonenumber"
+        label="Phone Number"
+        disabled={isLoading}
+        register={register}
+        errors={errors}
+        required
+      />
+      <Input
+        id="address"
+        label="Address"
+        disabled={isLoading}
+        register={register}
+        errors={errors}
+        required
+      />
     </div>
   );
 
   const footerContent = (
     <div className="flex flex-col gap-4 mt-3">
       <hr />
-      <Button
-        outline
-        label="Continue with Google"
-        icon={FcGoogle}
-        onClick={() => {}}
-      />
       <div className="justify-center flex flex-row item-center gap-2">
         <div>Already have an account?</div>
         <div
