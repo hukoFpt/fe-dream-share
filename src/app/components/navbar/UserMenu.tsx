@@ -7,6 +7,7 @@ import MenuItem from "./MenuItem";
 import UseRegisterModal from "@/app/hooks/useRegisterModal";
 import UseLoginModal from "@/app/hooks/useLoginModal";
 import UseCartModal from "@/app/hooks/useCartModal";
+import UseWalletModal from "@/app/hooks/useWalletModal";
 import { useRouter } from "next/navigation";
 
 const UserMenu = () => {
@@ -18,7 +19,8 @@ const UserMenu = () => {
   };
   const registerModal = UseRegisterModal();
   const loginModal = UseLoginModal();
-  const cartModal = UseCartModal(); 
+  const cartModal = UseCartModal();
+  const walletModal = UseWalletModal();
   const [isOpen, setIsOpen] = useState(false);
   const toggleOpen = useCallback(() => {
     setIsOpen((value) => !value);
@@ -27,9 +29,43 @@ const UserMenu = () => {
   return (
     <div className="relative z-20">
       <div className="flex flex-row items-center gap-3">
-        <div
-          onClick={cartModal.onOpen}
-          className="
+        {user && !user.isAdmin && (
+          <>
+            <div
+              onClick={walletModal.onOpen}
+              className="
+                flex flex-row
+                md:block
+                text-sm
+                font-semibold
+                py-3
+                px-4
+                rounded-full
+                hover:bg-neutral-100
+                transition
+                cursor-pointer"
+            >
+              <div className="flex flex-row items-center justify-center gap-2">
+                <div>Balance: USD ${user.balance}</div>
+                <div
+                  className="
+                  bg-rose-500
+                  text-white
+                  w-5
+                  h-5
+                  rounded-full
+                  flex
+                  items-center
+                  justify-center
+                "
+                >
+                  +
+                </div>
+              </div>
+            </div>
+            <div
+              onClick={cartModal.onOpen}
+              className="
                 md:block
                 text-sm
                 font-semibold
@@ -40,9 +76,11 @@ const UserMenu = () => {
                 transition
                 cursor-pointer
             "
-        >
-          Cart
-        </div>
+            >
+              Cart
+            </div>
+          </>
+        )}
         <div
           onClick={toggleOpen}
           className="
@@ -73,8 +111,7 @@ const UserMenu = () => {
             absolute
             rounded-xl
             shadow-md
-            w-[40vw]
-            md:w-3/4
+            w-[20vh]
             bg-white
             overflow-hidden
             right-0
@@ -92,7 +129,7 @@ const UserMenu = () => {
               )}
               {user && user.isAdmin === false && (
                 <>
-                  <MenuItem onClick={() => {}} label={user.email} />
+                  <MenuItem onClick={() => {}} label={user.name} />
                   <MenuItem onClick={handleSignOut} label="Sign Out" />
                 </>
               )}
@@ -102,7 +139,7 @@ const UserMenu = () => {
                     onClick={() => router.push("http://localhost:3001/console")}
                     label="Admin Console"
                   />
-                  <MenuItem onClick={() => {}} label={user.email} />
+                  <MenuItem onClick={() => {}} label={user.name} />
                   <MenuItem onClick={handleSignOut} label="Sign Out" />
                 </>
               )}
