@@ -7,8 +7,14 @@ import { IoMdExit } from "react-icons/io";
 import { BiMoneyWithdraw } from "react-icons/bi";
 import { RiMastercardLine } from "react-icons/ri";
 import { RiVisaLine } from "react-icons/ri";
+import { createCharge } from "@/app/api/deposit";
+import Stripe from "stripe";
+import { CardElement, useStripe, useElements } from '@stripe/react-stripe-js';
 
 const WalletModal = () => {
+  const stripe = new Stripe(
+    "sk_test_51Ovv7xEjdC9lsUQTv6ruzr9dDpF8ldYbEVzbBq7YkHXaouLPFg017XTnkNxsMy40faSzHwuZUTxElOhJKzRBQCJC00IGRiDJ1a"
+  );
   const storedUser = localStorage.getItem("currentUser");
   const user = JSON.parse(storedUser as string);
   const walletModal = useWalletModal();
@@ -26,6 +32,9 @@ const WalletModal = () => {
       formattedInput = formattedInput.slice(0, -1);
     }
     setCardNumber(formattedInput);
+    if (!validateCreditCardNumber(event.target.value)) {
+      console.log("Invalid card number");
+    }
   };
   const [cardHolder, setCardHolder] = useState("");
   const handleCardHolderChange = (event) => {
@@ -40,6 +49,19 @@ const WalletModal = () => {
     now.setHours(0, 0, 0, 0); // set the time to 00:00:00.000
     return expiry >= now;
   };
+  function validateCreditCardNumber(cardNumber) {
+    let sum = 0;
+    let shouldDouble = false;
+    for (let i = cardNumber.length - 1; i >= 0; i--) {
+      let digit = parseInt(cardNumber[i]);
+      if (shouldDouble) {
+        if ((digit *= 2) > 9) digit -= 9;
+      }
+      sum += digit;
+      shouldDouble = !shouldDouble;
+    }
+    return sum % 10 === 0;
+  }
   const handleExpiryDateChange = (event) => {
     let formattedInput = event.target.value.replace(/\D/g, "").substring(0, 4);
     formattedInput = formattedInput.replace(/(\d{2})/, "$1 / ");
@@ -47,11 +69,39 @@ const WalletModal = () => {
       formattedInput = formattedInput.slice(0, -3);
     }
     setExpiryDate(formattedInput);
-
     if (!validateExpiryDate(formattedInput)) {
       console.log("Invalid expiry date");
     }
     setIsDateValid(validateExpiryDate(formattedInput));
+  };
+
+  const handleDeposit = async () => {
+    try {
+      // Load Stripe.js
+      const stripe = await loadStripe("pk_test_51Ovv7xEjdC9lsUQTe37qtyxkjuuY3IRDyLVdIYB20qwFXQkn6eVzQJNv4VFTvH5YZfK4hZwEznmPnbJnFa0MdydL00v6RgVaBM");
+
+      // Create a token using the card details
+      const { token, error } = await stripe.createToken({
+        card: {
+          number: "4242424242424242", // Test card number
+          exp_month: 12,
+          exp_year: 2024,
+          cvc: "123",
+        },
+      });
+
+      if (error) {
+        console.error(error);
+        return;
+      }
+
+      // Send the token to your server to create a charge
+      const charge = await createCharge(token.id);
+
+      console.log(charge);
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   if (!walletModal.isOpen) {
@@ -114,7 +164,7 @@ const WalletModal = () => {
             <div className="font-semibold">USD</div>
           </div>
           <div className="flex justify-center gap-3 py-2">
-            <div className="flex flex-row align-middle justify-center border-2 border-rose-500 bg-rose-200 px-2 py-1 rounded-xl w-32 gap-1">
+            <div className="flex flex-row align-middle justify-center border-2 border-rose-500 bg-rose-200 px-2 py-1 rounded-xl w-40 gap-1">
               <div
                 className="text-rose-600 font-bold text-center cursor-pointer"
                 onClick={() => {
@@ -122,21 +172,9 @@ const WalletModal = () => {
                   setIsWithdrawClicked(false);
                 }}
               >
-                Deposit
+                Add Funds
               </div>
               <IoMdExit size={24} className="text-rose-600" />
-            </div>
-            <div className="flex flex-row align-middle justify-center border-2 border-neutral-600 bg-neutral-300 px-2 py-1 rounded-xl w-32 gap-1">
-              <div
-                className="text-neutral-700 font-bold text-center cursor-pointer"
-                onClick={() => {
-                  setIsWithdrawClicked(true);
-                  setIsDepositClicked(false);
-                }}
-              >
-                Withdraw
-              </div>
-              <BiMoneyWithdraw size={24} className="text-neutral-700" />
             </div>
           </div>
           {isDepositClicked && !isWithdrawClicked && (
@@ -177,7 +215,7 @@ const WalletModal = () => {
                     ></input>
                   </div>
                   <div>
-                    <div>Expiration Date</div>
+                    <div>Exp. Date</div>
                     <input
                       type="text"
                       value={expiryDate}
@@ -186,15 +224,92 @@ const WalletModal = () => {
                       className="w-20 h-5 font-semibold"
                     ></input>
                   </div>
+                  <div>
+                    <div>CVV</div>
+                    <input
+                      type="text"
+                      placeholder="XXX"
+                      className="w-10 h-5 font-semibold"
+                    ></input>
+                  </div>
                 </div>
                 {!isDateValid && (
                   <div className="text-red-500 px-2">*Invalid date</div>
                 )}
               </div>
+              <div>
+                <div className="text-center">Billing Information</div>
+                <div>
+                  <div className="flex flex-row items-center gap-2">
+                    <div>Amount</div>
+                    <input
+                      type="text"
+                      placeholder="100"
+                      className="w-16 h-5 font-semibold text-right"
+                    ></input>
+                    <div>$ USD {"(10% deposit bonus)"}</div>
+                  </div>
+                </div>
+                <div className="flex gap-3">
+                  <div>
+                    <div>First name</div>
+                    <input
+                      type="text"
+                      placeholder="John"
+                      className="w-20 h-5 font-semibold"
+                    ></input>
+                  </div>
+                  <div>
+                    <div>Last name</div>
+                    <input
+                      type="text"
+                      placeholder="Smith"
+                      className="w-20 h-5 font-semibold"
+                    ></input>
+                  </div>
+                  <div>
+                    <div>City</div>
+                    <input
+                      type="text"
+                      placeholder="New York"
+                      className="w-40 h-5 font-semibold"
+                    ></input>
+                  </div>
+                </div>
+                <div className="flex gap-3">
+                  <div>
+                    <div>Billing Address</div>
+                    <input
+                      type="text"
+                      placeholder="123 Main St"
+                      className="w-40 h-5 font-semibold"
+                    ></input>
+                  </div>
+                  <div className="px-3">
+                    <div>Postal Code</div>
+                    <input
+                      type="text"
+                      placeholder="10001"
+                      className="w-20 h-5 font-semibold"
+                    ></input>
+                  </div>
+                </div>
+              </div>
+              <div className="flex flex-row items-center px-8 mb-2 align-middle">
+                <div className="text-sm font-light">
+                  {
+                    "You'll have a chance to review your order before it's placed."
+                  }
+                </div>
+                <CardElement options={{hidePostalCode: true}} />
+                <button
+                  className="bg-rose-500 text-white px-2 py-1 rounded-lg w-1/3 text-center cursor-pointer"
+                  onClick={handleDeposit}
+                >
+                  Continue
+                </button>
+              </div>
             </div>
-          )}
-          {isWithdrawClicked && !isDepositClicked && (
-            <div>Withdraw button clicked!</div>
           )}
         </div>
       </div>
