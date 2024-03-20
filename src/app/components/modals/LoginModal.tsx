@@ -6,6 +6,7 @@ import { signIn } from "next-auth/react";
 import { FieldValues, SubmitHandler, useForm } from "react-hook-form";
 import { FcGoogle } from "react-icons/fc";
 import { useRouter } from "next/navigation";
+import Cookies from "js-cookie";
 
 import useRegisterModal from "@/app/hooks/useRegisterModal";
 import useLoginModal from "@/app/hooks/useLoginModal";
@@ -15,9 +16,22 @@ import Input from "../inputs/Input";
 import Heading from "../Heading";
 import Button from "../Button";
 
-import { login } from '@/app/api/login';
+import { login } from "@/app/api/login";
 
 const LoginModal = () => {
+  const currentUser = localStorage.getItem("currentUser");
+
+  if (currentUser && typeof currentUser === "string") {
+    try {
+      const user = JSON.parse(currentUser);
+      console.log(user);
+    } catch (error) {
+      console.error("Error parsing user data:", error);
+    }
+  } else {
+    console.log("No user is currently logged in");
+  }
+
   const router = useRouter();
   const loginModal = useLoginModal();
   const registerModal = useRegisterModal();
@@ -35,35 +49,8 @@ const LoginModal = () => {
   });
 
   const onSubmit: SubmitHandler<FieldValues> = async (data) => {
-
-    try {
-      console.log(data.email, data.password);
-      const response = await fetch(
-        `https://65cd13f5dd519126b8401401.mockapi.io/signin`
-      );
-
-      if (!response.ok) {
-        console.log("Login failed");
-        return;
-      }
-
-      const users = await response.json();
-
-      const user = users.find(
-        (user: any) => user.email === data.email && user.password === data.password
-      );
-
-      if (user) {
-        console.log("Login successful");
-        localStorage.setItem('currentUser', JSON.stringify(user));
-        console.log(user);
-        window.location.reload();
-      } else {
-        console.log("Login failed");
-      }
-    } catch (error) {
-      console.error("An error occurred while trying to login:", error);
-    }
+    console.log(data.email, data.password);
+    login(data.email, data.password);
   };
 
   const onToggle = useCallback(() => {
@@ -127,35 +114,29 @@ const LoginModal = () => {
 
   async function login(email: string, password: string) {
     try {
-      console.log(email, password);
-      const response = await fetch(
-        `https://65cd13f5dd519126b8401401.mockapi.io/signin`
-      );
-
-      if (!response.ok) {
-        console.log("Login failed");
-        return;
-      }
-
-      const users = await response.json();
-
-      const user = users.find(
-        (user: any) => user.email === email && user.password === password
-      );
-
-      if (user) {
-        console.log("Login successful");
-        localStorage.setItem('currentUser', JSON.stringify(user));
-        console.log(user);
-        window.location.reload();
+      const response = await axios.post("http://localhost:5000/accounts", {
+        email,
+        password,
+      });
+      localStorage.clear();
+      console.log("response login", response.data.data);
+      const user = response.data.data[0][0];
+      console.log("user", user);
+      if (user === undefined) {
+        localStorage.clear();
+        console.log("login failed");
       } else {
-        console.log("Login failed");
+        // Store the user data in localStorage
+        localStorage.setItem("currentUser", JSON.stringify(user));
+        console.log("Login success:", user);
+        window.location.reload();
       }
     } catch (error) {
-      console.error("An error occurred while trying to login:", error);
+      console.error("Error during login:", error);
+      throw error;
     }
   }
-  
+
   return (
     <Modal
       disabled={isLoading}

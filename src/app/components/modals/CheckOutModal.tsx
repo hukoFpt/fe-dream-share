@@ -3,8 +3,26 @@
 import useCheckoutModal from "@/app/hooks/useCheckoutModal";
 import React, { useCallback, useEffect, useState } from "react";
 import { useCart } from "../CartContext";
+import axios from "axios";
 
 const CheckoutModal = () => {
+  const currentUser = localStorage.getItem("currentUser");
+  let user;
+  if (currentUser && typeof currentUser === 'string') {
+    try {
+      user = JSON.parse(currentUser);
+      console.log(user);
+    } catch (error) {
+      console.error('Error parsing user data:', error);
+    }
+  } else {
+    console.log('No user is currently logged in');
+  }
+  const [name, setName] = useState(user?.name || '');
+  const [email, setEmail] = useState(user?.email || '');
+  const [phonenumber, setPhoneNumber] = useState(user?.phonenumber || '');
+  const [address, setAddress] = useState(user?.address || '');
+
   const checkoutModal = useCheckoutModal();
   const onToggle = useCallback(() => {
     checkoutModal.onClose();
@@ -12,6 +30,18 @@ const CheckoutModal = () => {
   }, []);
   const [isOpen, setIsOpen] = useState(false);
   const [selectedOption, setSelectedOption] = useState("option1");
+  const handleNameChange = (event) => {
+    setName(event.target.value);
+  };
+  const handleEmailChange = (event) => {
+    setEmail(event.target.value);
+  };
+  const handleAddressChange = (event) => {
+    setAddress(event.target.value);
+  };
+  const handlePhoneChange = (event) => {
+    setPhoneNumber(event.target.value);
+  };
   const handleChange = (event: {
     target: { value: React.SetStateAction<string> };
   }) => {
@@ -32,7 +62,26 @@ const CheckoutModal = () => {
   const totalPrice = cartItems.reduce((total, item) => {
     return total + item.price * item.quantity;
   }, 0);
-
+  const handleSubmit = async () => {
+    axios
+      .post("http://localhost:5000/orders", {
+        account_id: user?.id,
+        account_email: email,
+        account_name: name,
+        account_phone: phonenumber,
+        shipping_address: address,
+        payment_method: null,
+        total_price: totalPrice,
+        status: "pending",
+      })
+      .then((response) => {
+        console.log(response.data);
+        localStorage.removeItem("cartItems");
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  };
   if (!checkoutModal.isOpen) {
     return null;
   }
@@ -81,6 +130,8 @@ const CheckoutModal = () => {
               <label htmlFor="name">* Full Name</label>
               <input
                 className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline "
+                value={name}
+                onChange={handleNameChange}
                 type="text"
                 id="name"
                 name="name"
@@ -91,6 +142,8 @@ const CheckoutModal = () => {
                 <label htmlFor="email">* Email</label>
                 <input
                   className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline "
+                  value={email}
+                  onChange={handleEmailChange}
                   type="text"
                   id="email"
                   name="email"
@@ -100,6 +153,8 @@ const CheckoutModal = () => {
                 <label htmlFor="phone">* Phone</label>
                 <input
                   className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline "
+                  value={phonenumber}
+                  onChange={handlePhoneChange}
                   type="text"
                   id="phone"
                   name="phone"
@@ -110,6 +165,8 @@ const CheckoutModal = () => {
               <label htmlFor="address">* Address</label>
               <input
                 className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline "
+                value={address}
+                onChange={handleAddressChange}
                 type="text"
                 id="address"
                 name="name"
@@ -124,7 +181,7 @@ const CheckoutModal = () => {
                   name="options"
                   value="option1"
                   defaultChecked
-                  className="form-radio h-5 w-5 text-blue-600"
+                  className="w-4 h-4 s-yellow-400 bg-gray-100 border-gray-300 focus:ring-yellow-500 dark:focus:ring-yellow-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
                   onChange={handleChange}
                 />
                 <label htmlFor="option1" className="ml-2 text-gray-700">
@@ -221,6 +278,12 @@ const CheckoutModal = () => {
                 </tr>
               </table>
             </div>
+            <button
+              onClick={handleSubmit}
+              className="w-full bg-rose-500 text-white text-xl font-semibold px-2 py-1 my-2 rounded-lg"
+            >
+              Place Order
+            </button>
           </div>
         </div>
       </div>

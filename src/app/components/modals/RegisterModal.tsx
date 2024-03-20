@@ -34,15 +34,13 @@ const RegisterModal = () => {
   const onSubmit: SubmitHandler<FieldValues> = async (data) => {
     setIsLoading(true);
     try {
-      const formData = new FormData();
-      formData.append("email", data.email);
-      formData.append("password", data.password);
-
       axios
         .post("http://localhost:5000/accounts/create", {
           email: data.email,
           password: data.password,
           name: data.name,
+          phonenumber: data.phonenumber,
+          address: data.address,
         })
         .then(function (res) {
           console.log("Create new success!!!");

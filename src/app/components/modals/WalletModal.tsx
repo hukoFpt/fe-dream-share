@@ -9,14 +9,25 @@ import { RiMastercardLine } from "react-icons/ri";
 import { RiVisaLine } from "react-icons/ri";
 import { createCharge } from "@/app/api/deposit";
 import Stripe from "stripe";
-import { CardElement, useStripe, useElements } from '@stripe/react-stripe-js';
+import { CardElement, useStripe, useElements } from "@stripe/react-stripe-js";
+import axios from "axios";
 
 const WalletModal = () => {
   const stripe = new Stripe(
     "sk_test_51Ovv7xEjdC9lsUQTv6ruzr9dDpF8ldYbEVzbBq7YkHXaouLPFg017XTnkNxsMy40faSzHwuZUTxElOhJKzRBQCJC00IGRiDJ1a"
   );
-  const storedUser = localStorage.getItem("currentUser");
-  const user = JSON.parse(storedUser as string);
+  const currentUser = localStorage.getItem("currentUser");
+  let user;
+  if (currentUser && typeof currentUser === "string") {
+    try {
+      user = JSON.parse(currentUser);
+      console.log(user);
+    } catch (error) {
+      console.error("Error parsing user data:", error);
+    }
+  } else {
+    console.log("No user is currently logged in");
+  }
   const walletModal = useWalletModal();
   const [isOpen, setIsOpen] = useState(false);
   const [isDepositClicked, setIsDepositClicked] = useState(false);
@@ -75,30 +86,47 @@ const WalletModal = () => {
     setIsDateValid(validateExpiryDate(formattedInput));
   };
 
-  const handleDeposit = async () => {
+  const createPayment = async () => {
     try {
-      // Load Stripe.js
-      const stripe = await loadStripe("pk_test_51Ovv7xEjdC9lsUQTe37qtyxkjuuY3IRDyLVdIYB20qwFXQkn6eVzQJNv4VFTvH5YZfK4hZwEznmPnbJnFa0MdydL00v6RgVaBM");
-
-      // Create a token using the card details
-      const { token, error } = await stripe.createToken({
-        card: {
-          number: "4242424242424242", // Test card number
-          exp_month: 12,
-          exp_year: 2024,
-          cvc: "123",
+      const response = await axios.post(
+        "https://api-m.sandbox.paypal.com/v1/payments/payment",
+        {
+          intent: "sale",
+          payer: {
+            payment_method: "credit_card",
+            funding_instruments: [
+              {
+                credit_card: {
+                  number: "4032035742984065",
+                  type: "visa",
+                  expire_month: "04",
+                  expire_year: "2029",
+                  cvv2: "480",
+                  first_name: "John",
+                  last_name: "Doe",
+                },
+              },
+            ],
+          },
+          transactions: [
+            {
+              amount: {
+                total: "7.47",
+                currency: "USD",
+              },
+              description: "This is the payment transaction description.",
+            },
+          ],
         },
-      });
+        {
+          auth: {
+            username: "sb-ggzhb30066589_api1.business.example.com",
+            password: "KNR2UDVN6L57LDJL",
+          },
+        }
+      );
 
-      if (error) {
-        console.error(error);
-        return;
-      }
-
-      // Send the token to your server to create a charge
-      const charge = await createCharge(token.id);
-
-      console.log(charge);
+      console.log(response.data);
     } catch (error) {
       console.error(error);
     }
@@ -301,10 +329,9 @@ const WalletModal = () => {
                     "You'll have a chance to review your order before it's placed."
                   }
                 </div>
-                <CardElement options={{hidePostalCode: true}} />
                 <button
                   className="bg-rose-500 text-white px-2 py-1 rounded-lg w-1/3 text-center cursor-pointer"
-                  onClick={handleDeposit}
+                  onClick={() => createPayment()}
                 >
                   Continue
                 </button>

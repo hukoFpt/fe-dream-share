@@ -11,8 +11,18 @@ import UseWalletModal from "@/app/hooks/useWalletModal";
 import { useRouter } from "next/navigation";
 
 const UserMenu = () => {
-  const storedUser = localStorage.getItem("currentUser");
-  const user = JSON.parse(storedUser as string);
+  const currentUser = localStorage.getItem("currentUser");
+  let user;
+  if (currentUser && typeof currentUser === "string") {
+    try {
+      user = JSON.parse(currentUser);
+      console.log(user);
+    } catch (error) {
+      console.error("Error parsing user data:", error);
+    }
+  } else {
+    console.log("No user is currently logged in");
+  }
   const handleSignOut = () => {
     localStorage.removeItem("currentUser");
     window.location.reload();
@@ -29,13 +39,14 @@ const UserMenu = () => {
   return (
     <div className="relative z-20">
       <div className="flex flex-row items-center gap-3">
-        {user && !user.isAdmin && (
+        {user && user.role_id === 1 && (
           <>
             <div
               onClick={walletModal.onOpen}
               className="
                 flex flex-row
                 md:block
+                sm:hidden
                 text-sm
                 font-semibold
                 py-3
@@ -127,13 +138,13 @@ const UserMenu = () => {
                   <MenuItem onClick={registerModal.onOpen} label="Sign Up" />
                 </>
               )}
-              {user && user.isAdmin === false && (
+              {user && user.role_id === 1 && (
                 <>
                   <MenuItem onClick={() => {}} label={user.name} />
                   <MenuItem onClick={handleSignOut} label="Sign Out" />
                 </>
               )}
-              {user && user.isAdmin && (
+              {user && user.role_id === 2 && (
                 <>
                   <MenuItem
                     onClick={() => router.push("http://localhost:3001/console")}
