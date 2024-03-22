@@ -28,17 +28,15 @@ const CartProvider: React.FC<{ children: React.ReactNode }> = ({
     localStorage.setItem("cartItems", JSON.stringify(cartItems));
   }, [cartItems]);
 
-  const addToCart = (itemToAdd) => {
+  const addToCart = (itemToAdd: { id: any }) => {
     // Get the current cart items from localStorage
     const currentCartItems = JSON.parse(
       localStorage.getItem("cartItems") || "[]"
     );
-
     // Check if the item already exists in the cart
     const existingItem = currentCartItems.find(
       (item) => item.id === itemToAdd.id
     );
-
     let updatedCartItems;
     if (existingItem) {
       // If the item already exists, increase its quantity by one
@@ -51,10 +49,8 @@ const CartProvider: React.FC<{ children: React.ReactNode }> = ({
       // If the item doesn't exist, add it to the cart with a quantity of one
       updatedCartItems = [...currentCartItems, { ...itemToAdd, quantity: 1 }];
     }
-
     // Update the 'cartItems' item in localStorage with the updated cart items
     localStorage.setItem("cartItems", JSON.stringify(updatedCartItems));
-
     // Update the cartItems state
     setCartItems(updatedCartItems);
   };
@@ -69,6 +65,9 @@ const CartProvider: React.FC<{ children: React.ReactNode }> = ({
     setCartItems((prevItems) =>
       prevItems.map((i) => (i.id === item.id ? { ...i, quantity } : i))
     );
+    let updatedCartItems;
+    // Update the 'cartItems' item in localStorage with the updated cart items
+    localStorage.setItem("cartItems", JSON.stringify(updatedCartItems));
   };
 
   return (

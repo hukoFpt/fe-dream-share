@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 "use client";
 
 import useCartModal from "@/app/hooks/useCartModal";
@@ -16,24 +17,29 @@ const CartModal = () => {
     cartModal.onClose();
     cartModal.onOpen();
   }, []);
-  const removeFromCart = (itemToRemove) => {
+  const removeFromCart = (itemToRemove: never) => {
     // Get the current cart items from localStorage
     const currentCartItems = JSON.parse(
       localStorage.getItem("cartItems") || "[]"
     );
     // Remove the item from the current cart items
     const updatedCartItems = currentCartItems.filter(
-      (item) => item.id !== itemToRemove.id
+      (item: { id: any }) => item.id !== itemToRemove.id
     );
     // Update the 'cartItems' item in localStorage with the updated cart items
     localStorage.setItem("cartItems", JSON.stringify(updatedCartItems));
     // Update the cartItems state
     setCartItems(updatedCartItems);
   };
-  const { updateQuantity } = useCart();
-  const handleRemoveFromCart = (item: any) => {
-    removeFromCart(item);
-    console.log("Item removed from cart");
+  const updateQuantity = (itemToUpdate: any, quantity: number) => {
+    const currentCartItems = JSON.parse(
+      localStorage.getItem("cartItems") || "[]"
+    );
+    const updatedCartItems = currentCartItems.map((item: any) =>
+      item.id === itemToUpdate.id ? { ...item, quantity } : item
+    );
+    localStorage.setItem("cartItems", JSON.stringify(updatedCartItems));
+    setCartItems(updatedCartItems);
   };
   const [cartItems, setCartItems] = useState([]);
   useEffect(() => {
@@ -104,15 +110,22 @@ const CartModal = () => {
                   <td className="align-middle p-2 w-1/5">
                     <input
                       type="number"
+                      min="1"
                       className="text-center w-3/5 border-2 border-neutral-500 rounded-md"
                       value={item.quantity}
-                      onChange={(e) =>
-                        updateQuantity(item, parseInt(e.target.value))
-                      }
+                      onChange={(e) => {
+                        const quantity = parseInt(e.target.value);
+                        if (quantity < 1) {
+                          e.target.value = "1";
+                          updateQuantity(item, 1);
+                        } else {
+                          updateQuantity(item, quantity);
+                        }
+                      }}
                     ></input>
                   </td>
                   <td className="align-middle p-2 w-1/5">
-                    <button onClick={() => handleRemoveFromCart(item)}>
+                    <button onClick={() => removeFromCart(item)}>
                       <FontAwesomeIcon icon={faTrash} />
                     </button>
                   </td>
@@ -254,5 +267,4 @@ const CartModal = () => {
     </div>
   );
 };
-
 export default CartModal;

@@ -118,12 +118,12 @@ const LoginModal = () => {
         email,
         password,
       });
-      localStorage.clear();
+      localStorage.removeItem("currentUser");
       console.log("response login", response.data.data);
       const user = response.data.data[0][0];
       console.log("user", user);
       if (user === undefined) {
-        localStorage.clear();
+        localStorage.removeItem("currentUser");
         console.log("login failed");
       } else {
         // Store the user data in localStorage

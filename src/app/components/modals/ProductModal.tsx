@@ -138,14 +138,7 @@ const ProductModal: React.FC = () => {
               <div>
                 <button
                   className="mx-4 px-4 text-white text-2xl text-bold bg-rose-500 w-full h-10 rounded-lg"
-                  onClick={() => {
-                    productModal.addToCart({
-                      ...products,
-                      quantity,
-                    });
-                    productModal.setIsAdded(true);
-                    setTimeout(() => productModal.setIsAdded(false), 1500);
-                  }}
+                  onClick={addToCart}
                 >
                   Add to Cart
                 </button>

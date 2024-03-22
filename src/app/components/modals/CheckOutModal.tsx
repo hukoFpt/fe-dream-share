@@ -8,27 +8,42 @@ import axios from "axios";
 const CheckoutModal = () => {
   const currentUser = localStorage.getItem("currentUser");
   let user;
-  if (currentUser && typeof currentUser === 'string') {
+  if (currentUser && typeof currentUser === "string") {
     try {
       user = JSON.parse(currentUser);
       console.log(user);
     } catch (error) {
-      console.error('Error parsing user data:', error);
+      console.error("Error parsing user data:", error);
     }
   } else {
-    console.log('No user is currently logged in');
+    console.log("No user is currently logged in");
   }
-  const [name, setName] = useState(user?.name || '');
-  const [email, setEmail] = useState(user?.email || '');
-  const [phonenumber, setPhoneNumber] = useState(user?.phonenumber || '');
-  const [address, setAddress] = useState(user?.address || '');
+  const [name, setName] = useState(user?.name || "");
+  const [email, setEmail] = useState(user?.email || "");
+  const [phonenumber, setPhoneNumber] = useState(user?.phonenumber || "");
+  const [address, setAddress] = useState(user?.address || "");
 
   const checkoutModal = useCheckoutModal();
   const onToggle = useCallback(() => {
     checkoutModal.onClose();
     checkoutModal.onOpen();
   }, []);
+  useEffect(() => {
+    const storedCartItems = localStorage.getItem("cartItems");
+    if (storedCartItems) {
+      setCartItems(JSON.parse(storedCartItems));
+    }
+  }, []);
   const [isOpen, setIsOpen] = useState(false);
+  const [cartItems, setCartItems] = useState([]);
+  useEffect(() => {
+    if (isOpen) {
+      const storedItems = localStorage.getItem("cartItems");
+      if (storedItems) {
+        setCartItems(JSON.parse(storedItems));
+      }
+    }
+  }, [isOpen, setCartItems]);
   const [selectedOption, setSelectedOption] = useState("option1");
   const handleNameChange = (event) => {
     setName(event.target.value);
@@ -50,14 +65,6 @@ const CheckoutModal = () => {
   };
   const toggleOpen = useCallback(() => {
     setIsOpen((value) => !value);
-  }, []);
-  const [cartItems, setCartItems] = useState([]);
-
-  useEffect(() => {
-    const storedCartItems = localStorage.getItem("cartItems");
-    if (storedCartItems) {
-      setCartItems(JSON.parse(storedCartItems));
-    }
   }, []);
   const totalPrice = cartItems.reduce((total, item) => {
     return total + item.price * item.quantity;
@@ -92,7 +99,7 @@ const CheckoutModal = () => {
         items-center 
         flex 
         overflow-x-hidden 
-        overflow-y-auto 
+        overflow-y-auto
         fixed 
         inset-0 
         z-50 
