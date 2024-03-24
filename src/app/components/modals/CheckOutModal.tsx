@@ -4,6 +4,7 @@ import useCheckoutModal from "@/app/hooks/useCheckoutModal";
 import React, { useCallback, useEffect, useState } from "react";
 import { useCart } from "../CartContext";
 import axios from "axios";
+import useCartModal from "@/app/hooks/useCartModal";
 
 const CheckoutModal = () => {
   const currentUser = localStorage.getItem("currentUser");
@@ -11,7 +12,6 @@ const CheckoutModal = () => {
   if (currentUser && typeof currentUser === "string") {
     try {
       user = JSON.parse(currentUser);
-      console.log(user);
     } catch (error) {
       console.error("Error parsing user data:", error);
     }
@@ -22,7 +22,7 @@ const CheckoutModal = () => {
   const [email, setEmail] = useState(user?.email || "");
   const [phonenumber, setPhoneNumber] = useState(user?.phonenumber || "");
   const [address, setAddress] = useState(user?.address || "");
-
+  const cartModal = useCartModal();
   const checkoutModal = useCheckoutModal();
   const onToggle = useCallback(() => {
     checkoutModal.onClose();
@@ -37,13 +37,13 @@ const CheckoutModal = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [cartItems, setCartItems] = useState([]);
   useEffect(() => {
-    if (isOpen) {
-      const storedItems = localStorage.getItem("cartItems");
-      if (storedItems) {
-        setCartItems(JSON.parse(storedItems));
+    if (checkoutModal.isOpen) {
+      const storedCartItems = localStorage.getItem("cartItems");
+      if (storedCartItems) {
+        setCartItems(JSON.parse(storedCartItems));
       }
     }
-  }, [isOpen, setCartItems]);
+  }, [checkoutModal.isOpen]);
   const [selectedOption, setSelectedOption] = useState("option1");
   const handleNameChange = (event) => {
     setName(event.target.value);
@@ -69,9 +69,31 @@ const CheckoutModal = () => {
   const totalPrice = cartItems.reduce((total, item) => {
     return total + item.price * item.quantity;
   }, 0);
-  const handleSubmit = async () => {
-    axios
-      .post("http://localhost:5000/orders", {
+
+  //Submit Order Information
+  // const handleSubmitInfo = async () => {
+  //   axios
+  //     .post("http://localhost:5000/orders", {
+  //       account_id: user?.id,
+  //       account_email: email,
+  //       account_name: name,
+  //       account_phone: phonenumber,
+  //       shipping_address: address,
+  //       payment_method: null,
+  //       total_price: totalPrice,
+  //       status: "pending",
+  //     })
+  //     .then((response) => {
+  //       console.log(response.data);
+  //       return response.data.data[0].insertId;
+  //     })
+  //     .catch((error) => {
+  //       console.error(error);
+  //     });
+  // };
+  const handleSubmitInfo = async () => {
+    try {
+      const response = await axios.post("http://localhost:5000/orders", {
         account_id: user?.id,
         account_email: email,
         account_name: name,
@@ -80,15 +102,39 @@ const CheckoutModal = () => {
         payment_method: null,
         total_price: totalPrice,
         status: "pending",
-      })
-      .then((response) => {
-        console.log(response.data);
-        localStorage.removeItem("cartItems");
-      })
-      .catch((error) => {
-        console.error(error);
       });
+      const orderId = response.data.data[0].insertId;
+      console.log("Order ID: ", orderId);
+      return orderId; // Replace 'order_id' with the actual property name for the order ID in your response
+    } catch (error) {
+      console.error(error);
+    }
   };
+
+  //Submit Order Items
+  const handleSubmitItem = async (orderId) => {
+    console.log("current order ID ", orderId);
+    cartItems.map((item, index) => {
+      axios
+        .post(`http://localhost:5000/orderdetails/${orderId}`, {
+          order_id: orderId,
+          product_id: item.id,
+          quantity: item.quantity,
+          price: item.price,
+        })
+        .then((response) => {
+          console.log(response);
+        })
+        .catch((error) => {
+          console.error(error);
+        });
+    });
+  };
+  const handleClick = async () => {
+    const orderId = await handleSubmitInfo();
+    handleSubmitItem(orderId);
+  };
+
   if (!checkoutModal.isOpen) {
     return null;
   }
@@ -249,44 +295,53 @@ const CheckoutModal = () => {
             <div className="text-xl font-bold text-center">Order Summary</div>
             <div>
               <table className="w-full border-2 ">
-                <tr className="border-2 w-full">
-                  <th className="w-3/6 px-1 border-l-2">Product</th>
-                  <th className="w-1/6 px-1 border-l-2">QTY.</th>
-                  <th className="w-2/6 px-1 border-l-2">Price</th>
-                </tr>
-                {cartItems.map((item, index) => (
-                  <tr key={index}>
-                    <td className="border-2 px-1">{item.name}</td>
-                    <td className="border-2 text-center px-1">
-                      {item.quantity}
+                <thead>
+                  <tr className="border-2 w-full">
+                    <th className="w-3/6 px-1 border-l-2">Product</th>
+                    <th className="w-1/6 px-1 border-l-2">QTY.</th>
+                    <th className="w-2/6 px-1 border-l-2">Price</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {cartItems.map((item, index) => (
+                    <tr key={index}>
+                      <td className="border-2 px-1">{item.name}</td>
+                      <td className="border-2 text-center px-1">
+                        {item.quantity}
+                      </td>
+                      <td className="border-2 text-right px-1">
+                        USD ${item.price * item.quantity}
+                      </td>
+                    </tr>
+                  ))}
+                  <tr>
+                    <td className="border-2 px-1 text-xl" colSpan="2">
+                      Subtotal
                     </td>
-                    <td className="border-2 text-right px-1">
-                      USD ${item.price * item.quantity}
+                    <td className=" text-right p-1">USD ${totalPrice}</td>
+                  </tr>
+                  <tr>
+                    <td className=" px-1 text-xl" colSpan="2">
+                      Shipping
+                    </td>
+                    <td className="border-2 text-right p-1">USD $0</td>
+                  </tr>
+                  <tr>
+                    <td
+                      className="border-2 font-black px-1 text-xl"
+                      colSpan="2"
+                    >
+                      Total
+                    </td>
+                    <td className="border-2 text-right p-1">
+                      USD ${totalPrice}
                     </td>
                   </tr>
-                ))}
-                <tr>
-                  <td className="border-2 px-1 text-xl" colSpan="2">
-                    Subtotal
-                  </td>
-                  <td className=" text-right p-1">USD ${totalPrice}</td>
-                </tr>
-                <tr>
-                  <td className=" px-1 text-xl" colSpan="2">
-                    Shipping
-                  </td>
-                  <td className="border-2 text-right p-1">USD $0</td>
-                </tr>
-                <tr>
-                  <td className="border-2 font-black px-1 text-xl" colSpan="2">
-                    Total
-                  </td>
-                  <td className="border-2 text-right p-1">USD ${totalPrice}</td>
-                </tr>
+                </tbody>
               </table>
             </div>
             <button
-              onClick={handleSubmit}
+              onClick={handleClick}
               className="w-full bg-rose-500 text-white text-xl font-semibold px-2 py-1 my-2 rounded-lg"
             >
               Place Order

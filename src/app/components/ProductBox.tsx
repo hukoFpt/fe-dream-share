@@ -84,7 +84,7 @@ const ProductBox: React.FC<ProductProps> = ({
   return (
     <div>
       <div className="flex flex-col items-center max-w-[400px]">
-        <div className="group w-full relative h-80">
+        <div className="group w-full relative h-64">
           <Image
             layout="fill"
             objectFit="cover"

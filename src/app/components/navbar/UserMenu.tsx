@@ -16,7 +16,6 @@ const UserMenu = () => {
   if (currentUser && typeof currentUser === "string") {
     try {
       user = JSON.parse(currentUser);
-      console.log(user);
     } catch (error) {
       console.error("Error parsing user data:", error);
     }

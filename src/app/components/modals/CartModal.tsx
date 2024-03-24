@@ -95,43 +95,45 @@ const CartModal = () => {
         </button>
         {cartItems.length > 0 ? (
           <div>
-            {cartItems.map((item) => (
-              <div key={item.id} className="flex flex-row">
-                <table className="border w-full h-8">
-                  <td className="align-top p-2 w-1/5">
-                    <img src={item.image} alt={item.title} />
-                  </td>
-                  <td className="align-top p-2 w-3/5">
-                    <div className="font-sm text-neutral-400">
-                      {item.collection}
-                    </div>
-                    <div>{item.name}</div>
-                  </td>
-                  <td className="align-middle p-2 w-1/5">
-                    <input
-                      type="number"
-                      min="1"
-                      className="text-center w-3/5 border-2 border-neutral-500 rounded-md"
-                      value={item.quantity}
-                      onChange={(e) => {
-                        const quantity = parseInt(e.target.value);
-                        if (quantity < 1) {
-                          e.target.value = "1";
-                          updateQuantity(item, 1);
-                        } else {
-                          updateQuantity(item, quantity);
-                        }
-                      }}
-                    ></input>
-                  </td>
-                  <td className="align-middle p-2 w-1/5">
-                    <button onClick={() => removeFromCart(item)}>
-                      <FontAwesomeIcon icon={faTrash} />
-                    </button>
-                  </td>
-                </table>
-              </div>
-            ))}
+            <table className="border w-full h-8">
+              {cartItems.map((item) => (
+                <tbody key={item.id} className="flex flex-row">
+                  <tr>
+                    <td className="align-top p-2 w-1/5">
+                      <img src={item.image} alt={item.title} />
+                    </td>
+                    <td className="align-top p-2 w-3/5">
+                      <div className="font-sm text-neutral-400">
+                        {item.collection}
+                      </div>
+                      <div>{item.name}</div>
+                    </td>
+                    <td className="align-middle p-2 w-1/5">
+                      <input
+                        type="number"
+                        min="1"
+                        className="text-center w-3/5 border-2 border-neutral-500 rounded-md"
+                        value={item.quantity}
+                        onChange={(e) => {
+                          const quantity = parseInt(e.target.value);
+                          if (quantity < 1) {
+                            e.target.value = "1";
+                            updateQuantity(item, 1);
+                          } else {
+                            updateQuantity(item, quantity);
+                          }
+                        }}
+                      ></input>
+                    </td>
+                    <td className="align-middle p-2 w-1/5">
+                      <button onClick={() => removeFromCart(item)}>
+                        <FontAwesomeIcon icon={faTrash} />
+                      </button>
+                    </td>
+                  </tr>
+                </tbody>
+              ))}
+            </table>
             <div className="text-center w-full bg-rose-500 text-white py-2 text-lg font-bold rounded-b-xl">
               <button onClick={handleCheckout}>Go to Checkout</button>
             </div>
@@ -150,8 +152,8 @@ const CartModal = () => {
                 fill="currentColor"
               ></path>
               <path
-                fill-rule="evenodd"
-                clip-rule="evenodd"
+                fillRule="evenodd"
+                clipRule="evenodd"
                 d="M61.7635 23.3713C63.9442 21.136 66.9079 19.875 70.0042 19.875C73.1005 19.875 76.0642 21.136 78.2449 23.3713C80.4247 25.6056 81.6445 28.6303 81.6445 31.7784V34.5519H88.7802C89.2445 34.5404 89.6915 34.7107 90.0308 35.0212C90.3702 35.3318 90.5756 35.7579 90.6139 36.2098L94.0924 69.0123C94.17 69.7311 94.1088 70.4587 93.9119 71.1539C93.715 71.8492 93.3859 72.4994 92.9423 73.067C92.4986 73.6348 91.9488 74.1091 91.3232 74.4615C90.6975 74.8141 90.0089 75.0374 89.2967 75.1179C89.2548 75.1226 89.2126 75.125 89.1705 75.125H51.3104C49.8678 75.125 48.4895 74.5396 47.4752 73.5058C46.4713 72.4828 45.9038 71.1032 45.8852 69.6649C45.8706 69.4576 45.8717 69.2496 45.8884 69.0425C45.8892 69.0329 45.8901 69.0233 45.8911 69.0137L49.3946 36.2094C49.433 35.7576 49.6384 35.3317 49.9777 35.0212C50.317 34.7107 50.764 34.5404 51.2283 34.5519H58.3639V31.7784C58.3639 28.6303 59.5837 25.6056 61.7635 23.3713ZM59.4777 36.8019C59.4815 36.8019 59.4852 36.8019 59.4889 36.8019C59.4927 36.8019 59.4964 36.8019 59.5001 36.8019H80.5084C80.5121 36.8019 80.5158 36.8019 80.5195 36.8019C80.5233 36.8019 80.527 36.8019 80.5307 36.8019H88.4141L91.8551 69.2518L91.8554 69.254C91.9021 69.6863 91.8652 70.1237 91.747 70.5408C91.6289 70.9578 91.4322 71.3453 91.1695 71.6816C90.9067 72.0178 90.5833 72.2958 90.2187 72.5013C89.8714 72.697 89.4926 72.8234 89.1022 72.875H51.3103C50.4803 72.875 49.6783 72.5386 49.0811 71.93C48.483 71.3204 48.1397 70.4872 48.1348 69.611C48.1346 69.5828 48.1334 69.5547 48.1311 69.5266C48.1233 69.4301 48.123 69.3331 48.1301 69.2366L51.5942 36.8019H59.4777ZM79.3945 34.5519H60.6139V31.7784C60.6139 29.2093 61.6098 26.7509 63.3741 24.9425C65.1373 23.1351 67.5229 22.125 70.0042 22.125C72.4856 22.125 74.8711 23.1351 76.6344 24.9425C78.3986 26.7509 79.3945 29.2093 79.3945 31.7784V34.5519Z"
                 fill="currentColor"
               ></path>
@@ -204,50 +206,50 @@ const CartModal = () => {
                 fill="currentColor"
               ></path>
               <path
-                fill-rule="evenodd"
-                clip-rule="evenodd"
+                fillRule="evenodd"
+                clipRule="evenodd"
                 d="M23.457 9.67676H32.354V11.6768H23.457V9.67676Z"
                 fill="currentColor"
               ></path>
               <path
-                fill-rule="evenodd"
-                clip-rule="evenodd"
+                fillRule="evenodd"
+                clipRule="evenodd"
                 d="M20.6782 8.897V0H22.6782V8.897H20.6782Z"
                 fill="currentColor"
               ></path>
               <path
-                fill-rule="evenodd"
-                clip-rule="evenodd"
+                fillRule="evenodd"
+                clipRule="evenodd"
                 d="M20.6782 21.3531V12.4561H22.6782V21.3531H20.6782Z"
                 fill="currentColor"
               ></path>
               <path
-                fill-rule="evenodd"
-                clip-rule="evenodd"
+                fillRule="evenodd"
+                clipRule="evenodd"
                 d="M11 9.67676H19.897V11.6768H11V9.67676Z"
                 fill="currentColor"
               ></path>
               <path
-                fill-rule="evenodd"
-                clip-rule="evenodd"
+                fillRule="evenodd"
+                clipRule="evenodd"
                 d="M102.215 7.18408H107.368V9.18408H102.215V7.18408Z"
                 fill="currentColor"
               ></path>
               <path
-                fill-rule="evenodd"
-                clip-rule="evenodd"
+                fillRule="evenodd"
+                clipRule="evenodd"
                 d="M100.184 7.153V2H102.184V7.153H100.184Z"
                 fill="currentColor"
               ></path>
               <path
-                fill-rule="evenodd"
-                clip-rule="evenodd"
+                fillRule="evenodd"
+                clipRule="evenodd"
                 d="M100.184 14.3669V9.21387H102.184V14.3669H100.184Z"
                 fill="currentColor"
               ></path>
               <path
-                fill-rule="evenodd"
-                clip-rule="evenodd"
+                fillRule="evenodd"
+                clipRule="evenodd"
                 d="M95 7.18408H100.153V9.18408H95V7.18408Z"
                 fill="currentColor"
               ></path>

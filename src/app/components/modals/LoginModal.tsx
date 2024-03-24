@@ -24,7 +24,6 @@ const LoginModal = () => {
   if (currentUser && typeof currentUser === "string") {
     try {
       const user = JSON.parse(currentUser);
-      console.log(user);
     } catch (error) {
       console.error("Error parsing user data:", error);
     }
