@@ -35,7 +35,7 @@ const RegisterModal = () => {
     setIsLoading(true);
     try {
       axios
-        .post("http://localhost:5000/accounts/create", {
+        .post("http://26.221.156.50:5000/accounts/create", {
           email: data.email,
           password: data.password,
           name: data.name,

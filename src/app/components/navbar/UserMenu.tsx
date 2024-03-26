@@ -146,7 +146,7 @@ const UserMenu = () => {
               {user && user.role_id === 2 && (
                 <>
                   <MenuItem
-                    onClick={() => router.push("http://localhost:3001/console")}
+                    onClick={() => router.push("http://26.221.156.50:3000/console")}
                     label="Admin Console"
                   />
                   <MenuItem onClick={() => {}} label={user.name} />

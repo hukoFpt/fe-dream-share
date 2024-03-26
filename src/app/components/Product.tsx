@@ -10,7 +10,7 @@ const Product = () => {
 
   useEffect(() => {
     axios
-      .get("http://localhost:5000/products")
+      .get("http://26.221.156.50:5000/products")
       .then((response) => {
         setProducts(response.data.products);
       })

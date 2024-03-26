@@ -113,13 +113,13 @@ const LoginModal = () => {
 
   async function login(email: string, password: string) {
     try {
-      const response = await axios.post("http://localhost:5000/accounts", {
+      const response = await axios.post("http://26.221.156.50:5000/accounts", {
         email,
         password,
       });
       localStorage.removeItem("currentUser");
-      console.log("response login", response.data.data);
-      const user = response.data.data[0][0];
+      console.log("response login", response.data);
+      const user = response.data.account[0][0];
       console.log("user", user);
       if (user === undefined) {
         localStorage.removeItem("currentUser");
