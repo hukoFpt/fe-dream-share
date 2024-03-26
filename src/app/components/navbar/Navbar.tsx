@@ -10,7 +10,6 @@ import UserMenu from "./UserMenu";
 
 const Navbar = () => {
   const { y } = useWindowScroll();
-  const clearData = () => {localStorage.clear()}
 
   return (
     <div className="fixed w-full bg-white z-10 shadow-sm">
@@ -32,7 +31,6 @@ const Navbar = () => {
             "
           >
             <Logo />
-            <button onClick={clearData}>ClearData</button>
             <Search />
             <UserMenu />
           </div>

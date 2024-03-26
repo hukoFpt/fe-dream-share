@@ -17,6 +17,7 @@ export default function Home() {
       setPaddingTop("470px");
     }
   };
+  // Add a scroll event listener
   useEffect(() => {
     window.addEventListener("scroll", handleScroll);
     return () => {
@@ -25,9 +26,12 @@ export default function Home() {
   }, []);
 
   return (
+    //Top level: context provider that provides cart-related state and functionality to all the components nested within it. 
     <CartProvider>
+      {/* Product-related state and functionality */}
       <ProductProvider>
         <div style={{ paddingTop }}>
+          {/* Product list render */}
           <Product />
         </div>
       </ProductProvider>

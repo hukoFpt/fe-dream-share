@@ -79,6 +79,7 @@ const Product = () => {
               color={product.color}
               status={product.status}
               image={product.image}
+              stock={product.quantity}
             />
           );
         })}

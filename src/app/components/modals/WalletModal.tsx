@@ -14,9 +14,6 @@ import axios from "axios";
 import { PayPalButton } from "react-paypal-button-v2";
 
 const WalletModal = () => {
-  const stripe = new Stripe(
-    "sk_test_51Ovv7xEjdC9lsUQTv6ruzr9dDpF8ldYbEVzbBq7YkHXaouLPFg017XTnkNxsMy40faSzHwuZUTxElOhJKzRBQCJC00IGRiDJ1a"
-  );
   const currentUser = localStorage.getItem("currentUser");
   let user;
   if (currentUser && typeof currentUser === "string") {

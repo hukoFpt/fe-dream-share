@@ -39,7 +39,6 @@ export default function RootLayout({
           <ProductModal />
           <Navbar />
           <main>{children}</main>
-          <Footer />
         </ClientOnly>
       </body>
     </html>

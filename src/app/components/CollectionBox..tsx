@@ -31,7 +31,7 @@ const CollectionBox: React.FC<CategoryBoxProps> = ({
       <Image
         width={393}
         height={250}
-        className="object-cover h-[250px] w-[393px] rounded group-hover:opacity-50 transition-all duration-500 ease-in-out"
+        className="object-cover h-[250px] w-[393px] rounded group-hover:opacity-50 group-hover:border-2 group-hover:border-rose-500 transition-all duration-500 ease-in-out"
         alt=""
         src={image}
       ></Image>

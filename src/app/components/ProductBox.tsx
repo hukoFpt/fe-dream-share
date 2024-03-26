@@ -15,7 +15,7 @@ interface ProductProps {
   name: string;
   description: string;
   highlight: number;
-  quantity: number;
+  stock: number;
   size: string;
   color: string;
   status: string;
@@ -31,7 +31,7 @@ const ProductBox: React.FC<ProductProps> = ({
   name,
   description,
   highlight,
-  quantity,
+  stock,
   size,
   color,
   status,
@@ -55,6 +55,7 @@ const ProductBox: React.FC<ProductProps> = ({
         color,
         status,
         price,
+        stock,
         image,
       })
     );
@@ -72,6 +73,7 @@ const ProductBox: React.FC<ProductProps> = ({
         color,
         status,
         price,
+        stock,
         image,
       })
     );
@@ -93,8 +95,27 @@ const ProductBox: React.FC<ProductProps> = ({
             src={image}
           ></Image>
           <div className="absolute inset-0 flex flex-col items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
-            <button
-              className={`
+            {stock < 1 ? (
+              <div
+                className="
+                  relative
+                  text-center
+                  text-white
+                  font-bold
+                  disabled:opacity-70
+                  disabled:cursor-not-allowed
+                  rounded-lg
+                  transition
+                  w-1/2
+                bg-neutral-500
+                  my-3
+                  py-2"
+              >
+                Out of Stock
+              </div>
+            ) : (
+              <button
+                className={`
               relative
               disabled:opacity-70
               disabled:cursor-not-allowed
@@ -105,35 +126,38 @@ const ProductBox: React.FC<ProductProps> = ({
               bg-rose-500
               my-3
               `}
-              onClick={() => {
-                addToCart({
-                  id,
-                  category,
-                  collection,
-                  code,
-                  name,
-                  description,
-                  highlight,
-                  size,
-                  color,
-                  status,
-                  price,
-                  image,
-                });
-                setIsAdded(true);
-                setTimeout(() => setIsAdded(false), 1500);
-              }}
-            >
-              <div
-                className="
+                onClick={() => {
+                  addToCart({
+                    id,
+                    category,
+                    collection,
+                    code,
+                    name,
+                    description,
+                    highlight,
+                    size,
+                    color,
+                    stock,
+                    status,
+                    price,
+                    image,
+                  });
+                  setIsAdded(true);
+                  setTimeout(() => setIsAdded(false), 1500);
+                }}
+              >
+                <div
+                  className="
                 text-white
                 font-bold
                 py-2
               "
-              >
-                {isAdded ? "Added!" : "Add to Cart"}
-              </div>
-            </button>
+                >
+                  {isAdded ? "Added!" : "Add to Cart"}
+                </div>
+              </button>
+            )}
+            <div>Stock: {stock}</div>
             <button onClick={handleViewDetails}>View Details</button>
           </div>
         </div>

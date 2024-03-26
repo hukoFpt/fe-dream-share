@@ -234,8 +234,7 @@ const CheckoutModal = () => {
                   name="options"
                   value="option1"
                   defaultChecked
-                  className="w-4 h-4 s-yellow-400 bg-gray-100 border-gray-300 focus:ring-yellow-500 dark:focus:ring-yellow-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
-                  onChange={handleChange}
+                  className="form-radio h-5 w-5 text-blue-600"                    onChange={handleChange}
                 />
                 <label htmlFor="option1" className="ml-2 text-gray-700">
                   Cash on Delivery
@@ -253,9 +252,6 @@ const CheckoutModal = () => {
                 <label htmlFor="option2" className="ml-2 text-gray-700">
                   DreamShare Wallet Balance
                 </label>
-                {selectedOption === "option2" && (
-                  <div>You selected Option 2!</div>
-                )}
               </div>
               <div className="p-2 flex aligh-center border">
                 <input
@@ -267,27 +263,8 @@ const CheckoutModal = () => {
                   onChange={handleChange}
                 />
                 <label htmlFor="option3" className="ml-2 text-gray-700">
-                  Bank Transfer
+                  Paypal
                 </label>
-                {selectedOption === "option3" && (
-                  <div>You selected Option 3!</div>
-                )}
-              </div>
-              <div className="p-2 flex aligh-center border rounded-b-xl">
-                <input
-                  type="radio"
-                  id="option4"
-                  name="options"
-                  value="option4"
-                  className="form-radio h-5 w-5 text-blue-600"
-                  onChange={handleChange}
-                />
-                <label htmlFor="option4" className="ml-2 text-gray-700">
-                  Internet Banking
-                </label>
-                {selectedOption === "option4" && (
-                  <div>You selected Option 4!</div>
-                )}
               </div>
             </div>
           </div>
